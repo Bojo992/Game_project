@@ -1,4 +1,3 @@
---Close Combat
 local x,y = display.contentCenterX, display.contentCenterY
 local o = display.newRect( x, y, display.contentWidth, display.contentHeight )
 o.fill = { type="image", filename="Backgrounds\\bg.png" }
