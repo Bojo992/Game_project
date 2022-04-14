@@ -1,6 +1,6 @@
 local x,y = display.contentCenterX, display.contentCenterY
 local o = display.newRect( x, y, display.contentWidth, display.contentHeight )
-o.fill = { type="image", filename="Backgrounds\\Lv1 (Sleepin' Steve).png" }
+o.fill = { type="image", filename="Backgrounds\\Lv4 BigTooth.png" }
 --
 --Util variables
 local physics = require("physics")
@@ -22,7 +22,7 @@ local protagonist = display.newImage("Sprites\\Big Richard\\Bigger_Richard.png",
 physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
 protagonist.myName = "protagonist"
 
-local antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Idle_F1.png", 540, display.contentCenterY+100, 20, 20)
+local antaganist = display.newImage("Sprites\\Enemies\\BigTooth\\BigTooth_Idle.png", 540, display.contentCenterY+100, 20, 20)
 physics.addBody(antaganist, "static")
 antaganist.myName = "antaganist"
 
@@ -56,7 +56,9 @@ local bullet
         --Sign
         if (counter == openingWondowForShot) then
             display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Shoot_F1.png", 540, display.contentCenterY+100, 20, 20)
+            antaganist = display.newImage("Sprites\\Enemies\\BigTooth\\BigTooth_Shoot_F2.png", 540, display.contentCenterY+100, 20, 20)
+            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+            antaganist.myName = "antaganist"
             sign = display.newImage("Sprites\\Objects\\Fire!!.png", display.contentCenterX, display.contentCenterY)
         end
 
@@ -67,7 +69,9 @@ local bullet
         --Enemy shooting
         if (counter == closingWindowForShot) and (score == 0) then
             display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Shoot_F2.png", 540, display.contentCenterY+100, 20, 20)
+            antaganist = display.newImage("Sprites\\Enemies\\BigTooth\\BigTooth_Shoot_F1.png", 540, display.contentCenterY+100, 20, 20)
+            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+            antaganist.myName = "antaganist"
             local bulletEnemy = display.newRect(540, y + 100, 20, 5)
             physics.addBody(bulletEnemy, "dynamic", {isSensor = true})
             bulletEnemy.gravityScale = 0
@@ -99,7 +103,14 @@ local function onLocalCollision(event)
             (obj1 == antaganist and obj2 == bullet))
         then
             display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Die_F1.png", 540, display.contentCenterY+100, 20, 20)
+            antaganist = display.newImage("Sprites\\Enemies\\BigTooth\\BigTooth_Die_F1.png", 540, display.contentCenterY+100, 20, 20)
+            transition.to(antaganist, {x = 560, time = 225,
+            onComplete = 
+            function()
+                 display.remove(antaganist) 
+                 antaganist = display.newImage("Sprites\\Enemies\\BigTooth\\BigTooth_Die_F2.png", 560, display.contentCenterY+100, 20, 20)    
+            end
+            })
             --
             --switch to new level
             score = score + 1
