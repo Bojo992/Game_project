@@ -39,6 +39,7 @@ local bullet
                 bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
                 physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
                 bullet.myName = "bullet"
+                bullet.alpha = 0
                 transition.to(bullet, {x = 560, time = 300,
                 onComplete = function() display.remove( bullet ) end
                 })

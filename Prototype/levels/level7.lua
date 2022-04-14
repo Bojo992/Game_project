@@ -1,12 +1,13 @@
 local x,y = display.contentCenterX, display.contentCenterY
 local o = display.newRect( x, y, display.contentWidth, display.contentHeight )
-o.fill = { type="image", filename="Backgrounds\\Lv1 (Sleepin' Steve).png" }
+o.fill = { type="image", filename="Backgrounds\\Lv7 Churro.png" }
 --
 --Util variables
 local physics = require("physics")
 physics.start()
 
 local score = 0;
+local scoreText = display.newText(score, display.contentCenterX, 50, native.systemFont, 64)
 
 local sign
 local miss = 0
@@ -16,13 +17,11 @@ local closingWindowForShot = openingWondowForShot + 60
 
 --
 --Characters
--- local protagonist = display.newRect(100, display.contentCenterY+100, 50, 50)
--- protagonist.alpha = 0;
-local protagonist = display.newImage("Sprites\\Big Richard\\Bigger_Richard.png",100, display.contentCenterY+100, 20, 20)
+local protagonist = display.newImage("Sprites\\Enemies\\Churro the Dog\\Big_Richard_Idle_dog_level.png",display.contentCenterX - 50, display.contentCenterY+100, 20, 20)
 physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
 protagonist.myName = "protagonist"
 
-local antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Idle_F1.png", 540, display.contentCenterY+100, 20, 20)
+local antaganist = display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Idle_F2.png", display.contentCenterX + 50, display.contentCenterY+70, 20, 20)
 physics.addBody(antaganist, "static")
 antaganist.myName = "antaganist"
 
@@ -39,13 +38,17 @@ local bullet
                 bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
                 physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
                 bullet.myName = "bullet"
+                bullet.alpha = 0
                 transition.to(bullet, {x = 560, time = 300,
                 onComplete = function() display.remove( bullet ) end
                 })
             else 
                 --Miss shot
                 print("miss: ".. miss)
-                miss = 1;
+                miss = 2
+                display.remove(protagonist)
+                display.remove(antaganist)
+                display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Bite.png", display.contentCenterX, display.contentCenterY):scale(1.2, 1.2)
             end
         end
     end
@@ -54,9 +57,7 @@ local bullet
 --Controls enemy's shooting and sign    
     function shootEnemy()
         --Sign
-        if (counter == openingWondowForShot) then
-            display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Shoot_F1.png", 540, display.contentCenterY+100, 20, 20)
+        if (counter == openingWondowForShot) and not (miss == 2)then
             sign = display.newImage("Sprites\\Objects\\Fire!!.png", display.contentCenterX, display.contentCenterY)
         end
 
@@ -65,16 +66,10 @@ local bullet
         end
         
         --Enemy shooting
-        if (counter == closingWindowForShot) and (score == 0) then
+        if (counter == closingWindowForShot) and (score == 0) and not (miss == 2) then
+            display.remove(protagonist)
             display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Shoot_F2.png", 540, display.contentCenterY+100, 20, 20)
-            local bulletEnemy = display.newRect(540, y + 100, 20, 5)
-            physics.addBody(bulletEnemy, "dynamic", {isSensor = true})
-            bulletEnemy.gravityScale = 0
-            bulletEnemy.myName = "bulletEnemy"
-            transition.to(bulletEnemy, {x = -100, time = 525,
-            onComplete = function() display.remove(bulletEnemy) end
-            })
+            display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Bite.png", display.contentCenterX, display.contentCenterY):scale(1.2, 1.2)
         end
 
         counter = counter + 1
@@ -98,15 +93,16 @@ local function onLocalCollision(event)
         if ((obj1 == bullet and obj2 == antaganist) or 
             (obj1 == antaganist and obj2 == bullet))
         then
-            display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Die_F1.png", 540, display.contentCenterY+100, 20, 20)
             --
             --switch to new level
-            score = score + 1
+            display.remove(protagonist)
+            display.remove(antaganist)
+            display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Pet_F1.png", display.contentCenterX, display.contentCenterY):scale(1.2, 1.2)
+            miss = 2
         end
 
-        if ((obj1.myName == "bulletEnemy" and obj2.myName == "protagonist") or 
-            (obj1.myName == "protagonist" and obj2.myName == "bulletEnemy"))
+        if ((obj1 == antaganist and obj2 == protagonist) or 
+            (obj1 == protagonist and obj2 == antaganist))
         then
             display.remove(protagonist)
             protagonist = display.newImage("Sprites\\Big Richard\\Big_Richard_Die1_F4.png",100, display.contentCenterY+100, 20, 20)
