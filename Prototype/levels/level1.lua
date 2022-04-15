@@ -57,6 +57,8 @@ local bullet
         if (counter == openingWondowForShot) then
             display.remove(antaganist)
             antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Shoot_F1.png", 540, display.contentCenterY+100, 20, 20)
+            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+            antaganist.myName = "antaganist"
             sign = display.newImage("Sprites\\Objects\\Fire!!.png", display.contentCenterX, display.contentCenterY)
         end
 
@@ -68,6 +70,8 @@ local bullet
         if (counter == closingWindowForShot) and (score == 0) then
             display.remove(antaganist)
             antaganist = display.newImage("Sprites\\Enemies\\Sleepin' Steve\\Sleepin' Steve_Shoot_F2.png", 540, display.contentCenterY+100, 20, 20)
+            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+            antaganist.myName = "antaganist"
             local bulletEnemy = display.newRect(540, y + 100, 20, 5)
             physics.addBody(bulletEnemy, "dynamic", {isSensor = true})
             bulletEnemy.gravityScale = 0

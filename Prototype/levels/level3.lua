@@ -33,7 +33,7 @@ local bullet
 --Controls player's shooting and correctness of those
     function shoot(event)
         if (event.phase == "began") then
-            if (counter >= openingWondowForShot) and (counter <= closingWindowForShot) and (miss == 0) then
+            if (miss == 0) then
                 --Shooting at right time
                 bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
                 physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
@@ -64,17 +64,25 @@ local bullet
         
         --Enemy shooting
         if (counter == closingWindowForShot) and (score == 0) and not (miss == 2) then
-            antaganist.bodyType = "dinamic", {radius = 20, isSensor=true }
-            antaganist.gravityScale = 0
-
             display.remove(antaganist)
             antaganist = display.newImage("Sprites\\Enemies\\Larry (Sword Guy)\\Larry_Slash_F1.png", 540, display.contentCenterY+100, 20, 20)
+            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+            antaganist.myName = "antaganist"
 
-            transition.to(antaganist, {x = 150, time = 525,
+            transition.to(antaganist, {x = 120, time = 525,
             onComplete = 
             function()
                 display.remove(antaganist)
                 antaganist = display.newImage("Sprites\\Enemies\\Larry (Sword Guy)\\Larry_Slash_F3.png", 150, display.contentCenterY+100, 20, 20)
+                physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+                antaganist.myName = "antaganist"
+                bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
+                bullet.alpha = 0
+                physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
+                bullet.myName = "bullet"
+                transition.to(bullet, {x = 200, time = 300,
+                onComplete = function() display.remove( bullet ) end
+                })
             end
             })
         end
@@ -108,12 +116,15 @@ local function onLocalCollision(event)
             else
                 miss = 2 
                 display.remove(protagonist)
+                
+                physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
+                protagonist.myName = "protagonist"
                 protagonist = display.newImage("Sprites\\Big Richard\\Big_Richard_Die1_F4.png",100, display.contentCenterY+100, 20, 20)
             end
         end
 
-        if ((obj1 == antaganist and obj2 == protagonist) or 
-            (obj1 == protagonist and obj2 == antaganist))
+        if ((obj1.myName == "antaganist" and obj2.myName == "protagonist") or 
+            (obj1.myName == "protagonist" and obj2.myName == "antaganist"))
         then
             display.remove(protagonist)
             protagonist = display.newImage("Sprites\\Big Richard\\Big_Richard_Die1_F4.png",100, display.contentCenterY+100, 20, 20)
