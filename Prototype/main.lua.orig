@@ -1,0 +1,116 @@
+require ("baseClass")
+
+lifes = 1
+level = 2
+enemyShootAnimation = "Enemy"..level.."_shoot"
+
+background("Backgrounds\\Lv"..level..".png")
+
+protagonist("BR_idle")
+antagonist("Enemy"..level.."_idle")
+
+<<<<<<< HEAD
+function onLocalCollision(event)
+=======
+local antaganist = display.newImage("Sprites\\Enemies\\Big Banker\\Big_Banker_Idle.png", 540, display.contentCenterY+100, 20, 20)
+physics.addBody(antaganist, "static")
+antaganist.myName = "antaganist"
+
+--
+--Bullets
+local bullet
+
+--
+--Controls player's shooting and correctness of those
+    function shoot(event)
+        if (event.phase == "began") then
+            if (counter >= openingWondowForShot) and (counter <= closingWindowForShot) and (miss == 0) then
+                --Shooting at right time
+                bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
+                physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
+                bullet.myName = "bullet"
+                physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
+                transition.to(bullet, {x = 560, time = 300,
+                onComplete = function() display.remove( bullet ) end
+                })
+            else 
+                --Miss shot
+                print("miss: ".. miss)
+                miss = 1;
+            end
+        end
+    end
+
+--
+--Controls enemy's shooting and sign    
+    function shootEnemy()
+        --Sign
+        if (counter == openingWondowForShot) then
+            antaganist = display.newImage("Sprites\\Enemies\\Big Banker\\Big_Banker_Shoot_F3.png", 540, display.contentCenterY+100, 20, 20)
+            antaganist.myName = "antaganist"
+            sign = display.newImage("Sprites\\Objects\\Fire!!.png", display.contentCenterX, display.contentCenterY)
+        end
+
+        if (counter == closingWindowForShot) then
+            display.remove(sign)
+        end
+        
+        --Enemy shooting
+        if (counter == closingWindowForShot) and (score == 0) then
+            antaganist.bodyType = "dinamic", {radius = 20, isSensor=true }
+            antaganist = display.newImage("Sprites\\Enemies\\Big Banker\\Big_Banker_Shoot_F1.png", 540, display.contentCenterY+100, 20, 20)
+            antaganist.myName = "antaganist"
+            onComplete = function() display.remove(antaganist) end
+            })
+        end
+
+        counter = counter + 1
+    end
+
+
+Runtime:addEventListener("enterFrame", shootEnemy)
+Runtime:addEventListener("touch", shoot)
+
+--
+--Collision
+
+local function onLocalCollision(event)
+>>>>>>> 158a38a915f4760d1b0736d7c2166ee34d141a67
+    if (event.phase == "began") then
+        local obj1 = event.object1 
+        local obj2 = event.object2 
+
+        print("obj1: " .. obj1.myName)
+        print("obj2: " .. obj2.myName)
+
+        --Successfull shot
+        if ((obj1.myName == "missile" and obj2.myName == "antagonist") or 
+            (obj1.myName == "antagonist" and obj2.myName == "missile"))
+        then
+            lifes = lifes - 1
+
+            if (lifes == 0)
+            then
+                score = 1
+                display.remove(sign)
+                antagonistChange("Enemy"..level.."_die")
+            else
+                antagonistChange("Enemy"..level.."_"..lifes.."die")
+                display.remove(sign)
+                counter = 0
+            end
+        end
+
+        if ((obj1 == antaganist and obj2 == protagonist) or 
+            (obj1 == protagonist and obj2 == antaganist))
+        then
+            protagonistChange("BR_Die"..level)
+            antagonist:toFront()
+            miss = 2
+        end
+    end
+end
+
+Runtime:addEventListener("enterFrame", shootEnemy)
+Runtime:addEventListener("touch", shoot)
+Runtime:addEventListener("collision", onLocalCollision)
