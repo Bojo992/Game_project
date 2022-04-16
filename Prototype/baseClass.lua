@@ -70,6 +70,9 @@ function shoot(event)
             missile.myName = "missile"
             missile.gravityScale = 0
 
+            physics.addBody(antagonist, "static", {radius = 20, isSensor=true })
+            antagonist.myName = "antagonist"
+
             transition.to(missile, {x = 600, time = 300,
             onComplete = function() display.remove(missile) end
             })
@@ -129,9 +132,6 @@ function protagonistChange(animationName)
     protagonist.y = protagonistY
     protagonist:setSequence(animationName)
     protagonist:play()
-
-    physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
-    protagonist.myName = "protagonist"
 end
 
 function antagonist(animationName)
@@ -152,9 +152,6 @@ function antagonistChange(animationName)
     antagonist.y = antagonistY
     antagonist:setSequence(animationName)
     antagonist:play()
-
-    physics.addBody(antagonist, "static", {radius = 100, isSensor=true})
-    antagonist.myName = "antagonist"
 end
 
 function cleare()
