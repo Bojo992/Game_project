@@ -1,3 +1,6 @@
+require("BaseCode.baseValues")
+require ("BaseCode.baseEventHandlers")
+
 physics = require("physics")
 physics.start()
 
@@ -22,16 +25,17 @@ local missileSequences = missileAnimations:get()
 local missileSpritesheet = graphics.newImageSheet("Missile.png", missileSheetOptions)
 
 score = 0;
-lifes = 0
-counter = 0
-miss = 0
-level = 0
+lives = 0
+gameStatus = GAME_STATUS_NONE
+levelNo = 0
 
-openingWondowForShot = math.random(30, 60)
-closingWindowForShot = openingWondowForShot + 60
+frameCounter = 0
+
+openingFrameForShot = math.random(30, 60)
+closingFrameForShot = openingFrameForShot + 60
 
 --Setup for protagonist
-sign = nil
+fireSign = nil
 protagonist = nil
 protagonistX = 100
 protagonistY = display.contentCenterY + 100
@@ -47,18 +51,23 @@ missileX = 120
 missileY = display.contentCenterY + 100
 
 
---Adding background
-function background(filePath)
+function setBackgroundImage(filePath)
     local x,y = display.contentCenterX, display.contentCenterY
     o = display.newRect(x, y, display.contentWidth, display.contentHeight)
     o.fill = {type="image", filename=filePath}
 end
 
+function isWithinTimeWindow() 
+    return (frameCounter >= openingFrameForShot) and (frameCounter <= closingFrameForShot)
+end
+
 function shoot(event)
-    if (event.phase == "began") then
-        if (counter >= openingWondowForShot) and (counter <= closingWindowForShot) and (miss == 0) then
+    if (event.phase == "began") 
+    then
+        if (isWithinTimeWindow()) and (gameStatus == GAME_STATUS_NONE) 
+        then
             --Shooting at right time
-            protagonistChange("BR_Shoot"..level)
+            changeProtagonistAnimation("BR_Shoot"..levelNo)
             
             --Creating protagonist bullet
             local missile = display.newSprite(missileSpritesheet, missileSequences)
@@ -66,38 +75,41 @@ function shoot(event)
             missile.y = missileY
             missile:setSequence("Missile")
             missile:play()
-            physics.addBody(missile, "dynamic", {radius = 100, isSensor=true })
+            physics.addBody(missile, "dynamic", { radius = 100, isSensor=true })
             missile.myName = "missile"
             missile.gravityScale = 0
 
-            physics.addBody(antagonist, "static", {radius = 20, isSensor=true })
+            physics.addBody(antagonist, "static", { radius = 20, isSensor=true })
             antagonist.myName = "antagonist"
 
             transition.to(missile, {x = 600, time = 300,
-            onComplete = function() display.remove(missile) end
+                onComplete = function() 
+                    display.remove(missile) 
+                end
             })
         else 
-            --Miss shot
-            print("miss: ".. miss)
-            miss = 1;
+            --Missed shot opportunity
+            print("gameStatus: ".. gameStatus)
+            gameStatus = GAME_STATUS_MISSED_TIMEFRAME
         end
     end
 end
 
 function shootEnemy()
-    --Sign
-    if (counter == openingWondowForShot) and not (counter == closingWindowForShot) then
-        sign = display.newImage("Fire!!.png", display.contentCenterX, display.contentCenterY)
+    --display fire sign within opening and closing frames
+    if (frameCounter == openingFrameForShot) and not (frameCounter == closingFrameForShot) and (score == 0) 
+    then
+        fireSign = display.newImage("Fire!!.png", display.contentCenterX, display.contentCenterY)
     end
 
-    if (counter == closingWindowForShot) 
+    if (frameCounter == closingFrameForShot) 
     then
-        display.remove(sign)
+        display.remove(fireSign)
     end
     
     --Enemy shooting
-    if (counter == closingWindowForShot) and (score == 0) then
-        antagonistChange(enemyShootAnimation)
+    if (frameCounter == closingFrameForShot) and (score == 0) then
+        changeAntagonistAnimation(enemyShootAnimation)
 
         --Creating enemy's bullet
         local bulletEnemy = display.newRect(antagonistX, antagonistY, 35, 10)
@@ -114,10 +126,10 @@ function shootEnemy()
         })
     end
 
-    counter = counter + 1
+    frameCounter = frameCounter + 1
 end
 
-function protagonist(animationName)
+function setProtagonistAnimation(animationName)
     protagonist = display.newSprite(protagonistSpritesheet, protagonistSequences)
     protagonist.x = protagonistX
     protagonist.y = protagonistY
@@ -125,7 +137,7 @@ function protagonist(animationName)
     protagonist:play()
 end
 
-function protagonistChange(animationName)
+function changeProtagonistAnimation(animationName)
     display.remove(protagonist)
     protagonist = display.newSprite(protagonistSpritesheet, protagonistSequences)
     protagonist.x = protagonistX
@@ -134,7 +146,7 @@ function protagonistChange(animationName)
     protagonist:play()
 end
 
-function antagonist(animationName)
+function setAntagonistAnimation(animationName)
     antagonist = display.newSprite(antagonistSpritesheet, antagonistSequences)
     antagonist.x = antagonistX
     antagonist.y = antagonistY
@@ -145,7 +157,7 @@ function antagonist(animationName)
     antagonist.myName = "antagonist"
 end
 
-function antagonistChange(animationName)
+function changeAntagonistAnimation(animationName)
     display.remove(antagonist)
     antagonist = display.newSprite(antagonistSpritesheet, antagonistSequences)
     antagonist.x = antagonistX
@@ -154,8 +166,8 @@ function antagonistChange(animationName)
     antagonist:play()
 end
 
-function cleare()
+function clear()
     display.remove(protagonist)
     display.remove(antagonist)
-    display.remove(sign)
+    display.remove(fireSign)
 end
