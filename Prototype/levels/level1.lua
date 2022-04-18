@@ -1,48 +1,66 @@
-require ("baseClass")
+require("BaseCode.baseEventHandlers")
 
-lifes = 1
-level = 2
-enemyShootAnimation = "Enemy"..level.."_shoot"
+local scene = composer.newScene()
 
-background("Backgrounds\\Lv2 Banda.png")
+function scene:create( event )
+	local sceneGroup = self.view
 
-protagonist("BR_idle")
-antagonist("Enemy"..level.."_idle")
-
-function onLocalCollision(event)
-    if (event.phase == "began") then
-        local obj1 = event.object1 
-        local obj2 = event.object2 
-        print("obj1: " .. obj1.myName)
-        print("obj2: " .. obj2.myName)
-
-        --Successfull shot
-        if ((obj1.myName == "missile" and obj2.myName == "antagonist") or 
-            (obj1.myName == "antagonist" and obj2.myName == "missile"))
-        then
-            lifes = lifes - 1
-            if (lifes == 0)
-            then
-                score = 1
-                display.remove(sign)
-                antagonistChange("Enemy"..level.."_die")
-            else
-                antagonistChange("Sprites\\Enemies\\Big Banker\\Big_Banker_Idle_2ndPhase.png")
-                display.remove(sign)
-                counter = 0
-            end
-        end
-
-        if ((obj1.myName == "bulletEnemy" and obj2.myName == "protagonist") or 
-            (obj1.myName == "protagonist" and obj2.myName == "bulletEnemy"))
-        then
-            protagonistChange("BR_Die"..level)
-            antagonist:toFront()
-            miss = 2
-        end
-    end
+	lives = 1
+	levelNo = 1
+	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 end
 
-Runtime:addEventListener("enterFrame", shootEnemy)
-Runtime:addEventListener("touch", shoot)
-Runtime:addEventListener("collision", onLocalCollision)
+function scene:show( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is still off screen (but is about to come on screen)
+
+	elseif ( phase == "did" ) then
+		-- Code here runs when the scene is entirely on scree
+
+		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
+
+		setProtagonistAnimation("BR_idle")
+		setAntagonistAnimation("Enemy"..levelNo.."_idle")
+		
+		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:addEventListener("touch", onTouchShoot)
+		Runtime:addEventListener("collision", onCollision)
+	end
+end
+
+function scene:hide( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is on screen (but is about to go off screen)
+
+	elseif ( phase == "did" ) then
+		-- Code here runs immediately after the scene goes entirely off screen
+		
+	end
+end
+
+
+-- destroy()
+function scene:destroy( event )
+
+	local sceneGroup = self.view
+end
+
+
+-- -----------------------------------------------------------------------------------
+-- Scene event function listeners
+-- -----------------------------------------------------------------------------------
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
+-- -----------------------------------------------------------------------------------
+
+return scene

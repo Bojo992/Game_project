@@ -1,124 +1,84 @@
-local x,y = display.contentCenterX, display.contentCenterY
-local o = display.newRect( x, y, display.contentWidth, display.contentHeight )
-o.fill = { type="image", filename="Backgrounds\\Lv2 Banda.png"}
---
---Util variables
-local physics = require("physics")
-physics.start()
+require ("BaseCode.baseEventHandlers")
 
-local score = 0;
+local scene = composer.newScene()
 
-local sign
-local miss = 0
-local counter = 0
-local openingWondowForShot = math.random(60, 90)
-local closingWindowForShot = openingWondowForShot + 60
-
---
---Characters
--- local protagonist = display.newRect(100, display.contentCenterY+100, 50, 50)
--- protagonist.alpha = 0;
-local protagonist = display.newImage("Sprites\\Big Richard\\Bigger_Richard.png",100, display.contentCenterY+100, 20, 20)
-physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
-protagonist.myName = "protagonist"
-
-local antaganist = display.newImage("Sprites\\Enemies\\Banda\\Banda_Idle.png", 540, display.contentCenterY+100, 20, 20)
-physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
-antaganist.myName = "antaganist"
-
---
---Bullets
-local bullet
-
---
---Controls player's shooting and correctness of those
-    function shoot(event)
-        if (event.phase == "began") then
-            if (counter >= openingWondowForShot) and (counter <= closingWindowForShot) and (miss == 0) then
-                --Shooting at right time
-                bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
-                physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
-                bullet.gravityScale = 0
-                bullet.myName = "bullet"
-                transition.to(bullet, {x = 600, time = 300,
-                onComplete = function() display.remove( bullet ) end
-                })
-            else 
-                --Miss shot
-                print("miss: ".. miss)
-                miss = 1;
-            end
-        end
-    end
-
---
---Controls enemy's shooting and sign    
-    function shootEnemy()
-        --Sign
-        if (counter == openingWondowForShot) then
-            display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Banda\\Banda_Shoot_F2.png", 540, display.contentCenterY+100, 20, 20)
-            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
-            antaganist.myName = "antaganist"
-            sign = display.newImage("Sprites\\Objects\\Fire!!.png", display.contentCenterX, display.contentCenterY)
-        end
-
-        if (counter == closingWindowForShot) then
-            display.remove(sign)
-        end
-        
-        --Enemy shooting
-        if (counter == closingWindowForShot) and (score == 0) then
-            display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Banda\\Banda_Shoot_F1.png", 540, display.contentCenterY+100, 20, 20)
-            physics.addBody(antaganist, "static", {radius = 20, isSensor=true })
-            antaganist.myName = "antaganist"
-            local bulletEnemy = display.newRect(550, y + 100, 20, 5)
-            physics.addBody(bulletEnemy, "dynamic", {isSensor = true})
-            bulletEnemy.gravityScale = 0
-            bulletEnemy.myName = "bulletEnemy"
-            transition.to(bulletEnemy, {x = -100, time = 525,
-            onComplete = function() display.remove(bulletEnemy) end
-            })
-        end
-
-        counter = counter + 1
-    end
+-- -----------------------------------------------------------------------------------
+-- Code outside of the scene event functions below will only be executed ONCE unless
+-- the scene is removed entirely (not recycled) via "composer.removeScene()"
+-- -----------------------------------------------------------------------------------
 
 
-Runtime:addEventListener("enterFrame", shootEnemy)
-Runtime:addEventListener("touch", shoot)
 
---
---Collision
 
-local function onLocalCollision(event)
-    if (event.phase == "began") then
-        local obj1 = event.object1 
-        local obj2 = event.object2 
-        print("obj1: " .. obj1.myName)
-        print("obj2: " .. obj2.myName)
+-- -----------------------------------------------------------------------------------
+-- Scene event functions
+-- -----------------------------------------------------------------------------------
 
-        --Successfull shot
-        if ((obj1.myName == "bullet" and obj2.myName == "antaganist") or 
-            (obj1.myName == "antaganist" and obj2.myName == "bullet"))
-        then
-            display.remove(antaganist)
-            antaganist = display.newImage("Sprites\\Enemies\\Banda\\Banda_Die_F1.png", 540, display.contentCenterY+100, 20, 20)
-            --
-            --switch to new level
-            score = score + 1
-        end
+-- create()
+function scene:create( event )
 
-        if ((obj1.myName == "bulletEnemy" and obj2.myName == "protagonist") or 
-            (obj1.myName == "protagonist" and obj2.myName == "bulletEnemy"))
-        then
-            display.remove(protagonist)
-            protagonist = display.newImage("Sprites\\Big Richard\\Big_Richard_Die1_F4.png",100, display.contentCenterY+100, 20, 20)
-            antaganist:toFront()
-            miss = 2
-        end
-    end
+	local sceneGroup = self.view
+	-- Code here runs when the scene is first created but has not yet appeared on screen
+	resetVar()
+
+	lives = 1
+	levelNo = 2
+	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 end
 
-Runtime:addEventListener("collision", onLocalCollision)
+
+-- show()
+function scene:show( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is still off screen (but is about to come on screen)
+	elseif ( phase == "did" ) then
+		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
+
+		setProtagonistAnimation("BR_idle")
+		setAntagonistAnimation("Enemy"..levelNo.."_idle")
+
+		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:addEventListener("touch", onTouchShoot)
+		Runtime:addEventListener("collision", onCollision)
+	end
+end
+
+
+-- hide()
+function scene:hide( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is on screen (but is about to go off screen)
+
+	elseif ( phase == "did" ) then
+		-- Code here runs immediately after the scene goes entirely off screen
+
+	end
+end
+
+
+-- destroy()
+function scene:destroy( event )
+
+	local sceneGroup = self.view
+	-- Code here runs prior to the removal of scene's view
+end
+
+
+-- -----------------------------------------------------------------------------------
+-- Scene event function listeners
+-- -----------------------------------------------------------------------------------
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
+-- -----------------------------------------------------------------------------------
+
+return scene

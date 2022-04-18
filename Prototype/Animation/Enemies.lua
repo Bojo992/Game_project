@@ -640,7 +640,7 @@ SheetInfo.sequences =
     },
 	
 	{
-        name = "Enemy10_1_idle",
+        name = "Enemy10_idle",
         frames = {10},
         time = 800,
         loopCount = 0,
@@ -668,15 +668,8 @@ SheetInfo.sequences =
     },
 	
     {
-        name = "Enemy3_1_shoot",
-        frames = {36, 37},
-        time = 800,
-        loopCount = 1,
-    },
-
-    {
-        name = "Enemy3_2_shoot",
-        frames = {38, 39, 40, 41},
+        name = "Enemy3_shoot",
+        frames = {36, 37, 38, 39, 40, 41},
         time = 800,
         loopCount = 1,
     },
@@ -697,9 +690,16 @@ SheetInfo.sequences =
 
     {
         name = "Enemy6_shoot",
-        frames = {31, 32},
-        time = 800,
+        frames = {31, 32, 32, 27},
+        time = 1100,
         loopCount = 1,
+    },
+
+    {
+        name = "Enemy7_shoot",
+        frames = {23, 24},
+        time = 800,
+        loopCount = 0,
     },
 
     {
@@ -711,18 +711,18 @@ SheetInfo.sequences =
 
 
     {
-        name = "Enemy10_1_shoot",
+        name = "Enemy10_shoot",
         frames = {13, 14, 15, 16},
         time = 800,
         loopCount = 1,
     },
 
-    {
-        name = "Enemy10_2_shoot",
-        frames = {12},
-        time = 800,
-        loopCount = 0,
-    },
+    -- {
+    --     name = "Enemy10_shoot",
+    --     frames = {12},
+    --     time = 800,
+    --     loopCount = 0,
+    -- },
 
     {
         name = "Enemy1_die",
@@ -756,10 +756,10 @@ SheetInfo.sequences =
 
 
     {
-        name = "Enemy4_die",
-        frames = {18, 19},
+        name = "Enemy5_die",
+        frames = {59},
         time = 800,
-        loopCount = 1,
+        loopCount = 0,
     },
 
     {
@@ -770,14 +770,14 @@ SheetInfo.sequences =
     },
 
     {
-        name = "Enemy8_1_die",
+        name = "Enemy8_5_die",
         frames = {46},
         time = 800,
         loopCount = 1,
     },
 
     {
-        name = "Enemy8_2_die",
+        name = "Enemy8_4_die",
         frames = {45},
         time = 800,
         loopCount = 1,
@@ -791,21 +791,21 @@ SheetInfo.sequences =
     },
 
     {
-        name = "Enemy8_4_die",
+        name = "Enemy8_2_die",
         frames = {43},
         time = 800,
         loopCount = 1,
     },
 
     {
-        name = "Enemy8_5_die",
+        name = "Enemy8_1_die",
         frames = {42},
         time = 800,
         loopCount = 1,
     },
 
     {
-        name = "Enemy8_6_die",
+        name = "Enemy8_die",
         frames = {47},
         time = 800,
         loopCount = 1,
@@ -819,7 +819,7 @@ SheetInfo.sequences =
     },
 	
 	{
-        name = "Enemy10_2_die",
+        name = "Enemy10_die",
         frames = {7, 8, 9},
         time = 800,
         loopCount = 1,

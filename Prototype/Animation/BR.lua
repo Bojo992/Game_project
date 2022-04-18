@@ -586,14 +586,7 @@ SheetInfo.sequences =
     },
 
     {
-        name = "BR_Die10_1",
-        frames = {26, 27},
-        time = 900,
-        loopCount = 1
-    },
-
-    {
-        name = "BR_Die10_2",
+        name = "BR_Die10",
         frames = {28, 29, 30},
         time = 900,
         loopCount = 1
@@ -645,7 +638,7 @@ SheetInfo.sequences =
         name = "BR_Shoot7",
         frames = {53, 54},
         time = 800,
-        loopCount = 1
+        loopCount = 0
     },
 
     {
@@ -663,15 +656,8 @@ SheetInfo.sequences =
     },
 
     {
-        name = "BR_Shoot10_1",
-        frames = {43, 44},
-        time = 800,
-        loopCount = 1
-    },
-
-    {
-        name = "BR_Shoot10_2",
-        frames = {45},
+        name = "BR_Shoot10",
+        frames = {43, 44, 45},
         time = 800,
         loopCount = 1
     },

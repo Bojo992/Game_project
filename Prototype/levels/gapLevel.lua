@@ -9,15 +9,14 @@ local scene = composer.newScene()
 
 
 
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
 
 -- create()
 function scene:create( event )
-
-	local sceneGroup = self.view
-	-- Code here runs when the scene is first created but has not yet appeared on screen
+	
 end
 
 
@@ -29,21 +28,22 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-		lives = 6
-		levelNo = 8
-		enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 
-		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
-
-		setProtagonistAnimation("BR_idle")
-		setAntagonistAnimation("Enemy"..levelNo.."_idle")
-		
-		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
-		Runtime:addEventListener("touch", onTapChangeLevel)
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
+		
+	local sceneGroup = self.view
+
+	setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
+
+	start = display.newImage("KeepGoing Button.png", protagonistX, protagonistY)
+	start:scale(0.5, 0.5)
+	start:addEventListener("tap", Start)
+	
+	exit = display.newImage("Adios Button.png", antagonistX, antagonistY)
+	exit:addEventListener("tap", Exit)
+	exit:scale(0.25, 0.25)
+	
 
 	end
 end
@@ -56,8 +56,6 @@ function scene:hide( event )
 	local phase = event.phase
 
 	if ( phase == "will" ) then
-		-- Code here runs when the scene is on screen (but is about to go off screen)
-
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
@@ -69,7 +67,6 @@ end
 function scene:destroy( event )
 
 	local sceneGroup = self.view
-	-- Code here runs prior to the removal of scene's view
 end
 
 

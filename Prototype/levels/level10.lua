@@ -1,46 +1,87 @@
-require ("baseClass")
+require ("BaseCode.baseEventHandlers")
 
-lifes = 2
+local scene = composer.newScene()
 
-background("Backgrounds\\Lv8 Richolas.png")
 
-protagonist("Sprites\\Big Richard\\Bigger_Richard.png")
-antagonist("Sprites\\Enemies\\Big Banker\\Big_Banker_Idle.png")
+-- -----------------------------------------------------------------------------------
+-- Code outside of the scene event functions below will only be executed ONCE unless
+-- the scene is removed entirely (not recycled) via "composer.removeScene()"
+-- -----------------------------------------------------------------------------------
 
-function onLocalCollision(event)
-    if (event.phase == "began") then
-        local obj1 = event.object1 
-        local obj2 = event.object2 
-        print("obj1: " .. obj1.myName)
-        print("obj2: " .. obj2.myName)
 
-        --Successfull shot
-        if ((obj1.myName == "bullet" and obj2.myName == "antagonist") or 
-            (obj1.myName == "antagonist" and obj2.myName == "bullet"))
-        then
-            lifes = lifes - 1
-            if (lifes == 0)
-            then
-                score = 1
-                display.remove(sign)
-                antagonistChange("Sprites\\Enemies\\Revolver Richolas\\Revolver_Richolas_Dead.png")
-            else
-                antagonistChange("Sprites\\Enemies\\Big Banker\\Big_Banker_Idle_2ndPhase.png")
-                display.remove(sign)
-                counter = 0
-            end
-        end
 
-        if ((obj1.myName == "bulletEnemy" and obj2.myName == "protagonist") or 
-            (obj1.myName == "protagonist" and obj2.myName == "bulletEnemy"))
-        then
-            protagonistChange("Sprites\\Big Richard\\Big_Richard_Die1_F4.png")
-            antagonist:toFront()
-            miss = 2
-        end
-    end
+
+-- -----------------------------------------------------------------------------------
+-- Scene event functions
+-- -----------------------------------------------------------------------------------
+
+-- create()
+function scene:create( event )
+
+	local sceneGroup = self.view
+	-- Code here runs when the scene is first created but has not yet appeared on screen
+	lives = 2
+	levelNo = 10
+	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 end
 
-Runtime:addEventListener("enterFrame", shootEnemy)
-Runtime:addEventListener("touch", shoot)
-Runtime:addEventListener("collision", onLocalCollision)
+
+-- show()
+function scene:show( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is still off screen (but is about to come on screen)
+		
+		
+		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
+
+		setProtagonistAnimation("BR_idle")
+		setAntagonistAnimation("Enemy"..levelNo.."_idle")
+		
+		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:addEventListener("touch", onTouchShoot)
+		Runtime:addEventListener("collision", onCollision)
+	elseif ( phase == "did" ) then
+		-- Code here runs when the scene is entirely on screen
+
+	end
+end
+
+
+-- hide()
+function scene:hide( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is on screen (but is about to go off screen)
+		
+	elseif ( phase == "did" ) then
+		-- Code here runs immediately after the scene goes entirely off screen
+
+	end
+end
+
+
+-- destroy()
+function scene:destroy( event )
+
+	local sceneGroup = self.view
+	-- Code here runs prior to the removal of scene's view
+end
+
+
+-- -----------------------------------------------------------------------------------
+-- Scene event function listeners
+-- -----------------------------------------------------------------------------------
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
+-- -----------------------------------------------------------------------------------
+
+return scene

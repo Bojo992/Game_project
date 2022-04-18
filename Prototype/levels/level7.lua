@@ -1,115 +1,216 @@
-local x,y = display.contentCenterX, display.contentCenterY
-local o = display.newRect( x, y, display.contentWidth, display.contentHeight )
-o.fill = { type="image", filename="Backgrounds\\Lv7 Churro.png" }
---
---Util variables
-local physics = require("physics")
-physics.start()
+require ("BaseCode.baseEventHandlers")
 
-local score = 0;
-local scoreText = display.newText(score, display.contentCenterX, 50, native.systemFont, 64)
+local scene = composer.newScene()
 
-local sign
-local miss = 0
-local counter = 0
-local openingWondowForShot = math.random(30, 60)
-local closingWindowForShot = openingWondowForShot + 60
+Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+Runtime:removeEventListener("touch", onTouchShoot)
+Runtime:removeEventListener("collision", onCollision)
 
---
---Characters
-local protagonist = display.newImage("Sprites\\Enemies\\Churro the Dog\\Big_Richard_Idle_dog_level.png",display.contentCenterX - 50, display.contentCenterY+100, 20, 20)
-physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
-protagonist.myName = "protagonist"
-
-local antaganist = display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Idle_F2.png", display.contentCenterX + 50, display.contentCenterY+70, 20, 20)
-physics.addBody(antaganist, "static")
-antaganist.myName = "antaganist"
-
---
---Bullets
-local bullet
-
---
---Controls player's shooting and correctness of those
-    function shoot(event)
-        if (event.phase == "began") then
-            if (counter >= openingWondowForShot) and (counter <= closingWindowForShot) and (miss == 0) then
-                --Shooting at right time
-                bullet = display.newRect(120, display.contentCenterY+100, 20, 5)
-                physics.addBody(bullet, "dynamic", {radius = 20, isSensor=true })
-                bullet.myName = "bullet"
-                bullet.alpha = 0
-                transition.to(bullet, {x = 560, time = 300,
-                onComplete = function() display.remove( bullet ) end
-                })
-            else 
-                --Miss shot
-                print("miss: ".. miss)
-                miss = 2
-                display.remove(protagonist)
-                display.remove(antaganist)
-                display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Bite.png", display.contentCenterX, display.contentCenterY):scale(1.2, 1.2)
-            end
-        end
-    end
-
---
---Controls enemy's shooting and sign    
-    function shootEnemy()
-        --Sign
-        if (counter == openingWondowForShot) and not (miss == 2)then
-            sign = display.newImage("Sprites\\Objects\\Fire!!.png", display.contentCenterX, display.contentCenterY)
-        end
-
-        if (counter == closingWindowForShot) then
-            display.remove(sign)
-        end
-        
-        --Enemy shooting
-        if (counter == closingWindowForShot) and (score == 0) and not (miss == 2) then
-            display.remove(protagonist)
-            display.remove(antaganist)
-            display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Bite.png", display.contentCenterX, display.contentCenterY):scale(1.2, 1.2)
-        end
-
-        counter = counter + 1
-    end
-
-
-Runtime:addEventListener("enterFrame", shootEnemy)
-Runtime:addEventListener("touch", shoot)
-
---
---Collision
-
-local function onLocalCollision(event)
-    if (event.phase == "began") then
+function onCollisionDog(event)
+    if (event.phase == "began") 
+    then
         local obj1 = event.object1 
         local obj2 = event.object2 
+
         print("obj1: " .. obj1.myName)
         print("obj2: " .. obj2.myName)
 
         --Successfull shot
-        if ((obj1 == bullet and obj2 == antaganist) or 
-            (obj1 == antaganist and obj2 == bullet))
+        if (checkCollision(obj1, obj2, "missile", "antagonist")) and (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot + 10))
         then
-            --
-            --switch to new level
-            display.remove(protagonist)
-            display.remove(antaganist)
-            display.newImage("Sprites\\Enemies\\Churro the Dog\\Churro_Pet_F1.png", display.contentCenterX, display.contentCenterY):scale(1.2, 1.2)
-            miss = 2
+            lives = lives - 1
+            if (lives == 0)
+            then
+                score = 1
+                display.remove(sign)
+                changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_die")
+                gameStatus = GAME_STATUS_LEVEL_COMPLETE
+                display.remove(antagonist)
+                print("Level done, game status "..gameStatus.." frame "..frameCounter)
+                Runtime:removeEventListener("touch", onTouchShoot)
+                Runtime:addEventListener("touch", onTapChangeLevel)
+            else
+                changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_"..lives.."_die")
+                frameCounter = 0
+                display.remove(fireSign)
+            end
+        end
+        
+        if (closeCombat)
+        then
+            enemyAtack = "antagonist"
+        else
+            enemyAtack = "bulletEnemy"
         end
 
-        if ((obj1 == antaganist and obj2 == protagonist) or 
-            (obj1 == protagonist and obj2 == antaganist))
+        if (checkCollision(obj1, obj2, enemyAtack, "protagonist")) 
         then
-            display.remove(protagonist)
-            protagonist = display.newImage("Sprites\\Big Richard\\Big_Richard_Die1_F4.png",100, display.contentCenterY+100, 20, 20)
-            antaganist:toFront()
-            miss = 2
+            display.remove(antagonist)
+            changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
+
+            gameStatus = GAME_STATUS_PROTAGONIST_SHOT
         end
     end
 end
 
-Runtime:addEventListener("collision", onLocalCollision)
+function onTouchShootDog(event)
+
+    if (event.phase == "began") 
+    then       
+        if (isWithinTimeWindow(frameCounter, openingFrameForShot - 10, closingFrameForShot)) and (gameStatus == GAME_STATUS_NONE and not (gameStatus == GAME_STATUS_LEVEL_COMPLETE)) 
+        then
+            --Shooting at right time
+            changeProtagonistAnimation("BR_Shoot"..levelNo)
+            
+            setMissileDog()
+
+            transition.to(missileDog, {x = 500, time = 300,
+                onComplete = function() 
+                    display.remove(missileDog)
+                end
+            })
+        else 
+            if not (gameStatus == GAME_STATUS_LEVEL_COMPLETE)
+            then
+                --Missed shot opportunity
+                print("gameStatus: ".. gameStatus)
+                gameStatus = GAME_STATUS_MISSED_TIMEFRAME
+            end
+        end
+    end
+end
+
+function setMissileDog()
+    missileDog = display.newSprite(missileSpritesheet, missileSequences)
+    missileDog.x = missileX+400
+    missileDog.y = missileY
+    physics.addBody(missileDog, "dynamic", { radius = 100, isSensor=true })
+    missileDog.myName = "missile"
+    missileDog.gravityScale = 0
+    missileDog.alpha = 0
+end
+
+function onFrameEnemyShotDog()
+
+    displaySign()
+    
+    --Enemy shooting
+    if (frameCounter == closingFrameForShot) and (score == 0) then
+        changeAntagonistAnimation(enemyShootAnimation)
+
+        if (closeCombat)
+        then
+            antagonist.bodyType = "dynamic"
+            antagonist.gravityScale = 0
+
+            transition.to(antagonist, {x = enemyCloseCombatFinalPosition, time = 525,
+                onComplete = 
+                    function() 
+                        display.remove(antagonist) 
+                    end
+            })
+        else
+            setEnemyBullet()
+
+            transition.to(bulletEnemy, {x = -100, time = 525,
+                onComplete = 
+                    function() 
+                        display.remove(bulletEnemy) 
+                    end
+            })
+        end
+    end
+
+    frameCounter = frameCounter + 1
+end
+
+-- -----------------------------------------------------------------------------------
+-- Code outside of the scene event functions below will only be executed ONCE unless
+-- the scene is removed entirely (not recycled) via "composer.removeScene()"
+-- -----------------------------------------------------------------------------------
+
+
+
+
+-- -----------------------------------------------------------------------------------
+-- Scene event functions
+-- -----------------------------------------------------------------------------------
+
+-- create()
+function scene:create( event )
+
+	local sceneGroup = self.view
+	-- Code here runs when the scene is first created but has not yet appeared on screen
+    lives = 1
+    levelNo = 7
+    closeCombat = true
+    enemyCloseCombatFinalPosition = display.contentCenterX - 5
+    enemyShootAnimation = "Enemy"..levelNo.."_shoot"
+    
+    protagonistX = display.contentCenterX - 40
+    
+    antagonistX = display.contentCenterX + 40
+end
+
+
+-- show()
+function scene:show( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is still off screen (but is about to come on screen)
+        setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
+
+        setProtagonistAnimation("BR_idle")
+        setAntagonistAnimation("Enemy"..levelNo.."_idle")
+
+        Runtime:addEventListener("enterFrame", onFrameEnemyShotDog)
+        Runtime:addEventListener("touch", onTouchShootDog)
+        Runtime:addEventListener("collision", onCollisionDog)
+	elseif ( phase == "did" ) then
+		-- Code here runs when the scene is entirely on screen
+
+	end
+end
+
+
+-- hide()
+function scene:hide( event )
+
+	local sceneGroup = self.view
+	local phase = event.phase
+
+	if ( phase == "will" ) then
+		-- Code here runs when the scene is on screen (but is about to go off screen)
+        Runtime:removeEventListener("enterFrame", onFrameEnemyShotDog)
+		Runtime:removeEventListener("touch", onTouchShootDog)
+		Runtime:removeEventListener("collision", onCollisionDog)
+		resetVar()
+		clear()
+	elseif ( phase == "did" ) then
+		-- Code here runs immediately after the scene goes entirely off screen
+
+	end
+end
+
+
+-- destroy()
+function scene:destroy( event )
+
+	local sceneGroup = self.view
+	-- Code here runs prior to the removal of scene's view
+end
+
+
+-- -----------------------------------------------------------------------------------
+-- Scene event function listeners
+-- -----------------------------------------------------------------------------------
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
+-- -----------------------------------------------------------------------------------
+
+return scene
