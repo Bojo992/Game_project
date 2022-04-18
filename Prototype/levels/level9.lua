@@ -1,4 +1,6 @@
 require ("BaseCode.baseEventHandlers")
+resetVar()
+
 
 function onCollisionLv9(event)
     if (event.phase == "began") 
@@ -24,7 +26,14 @@ function onFrameEnemyShotLv9()
     
     --Enemy shooting
     if (frameCounter == closingFrameForShot) and (score == 0) and not (gameStatus == GAME_STATUS_PROTAGONIST_SHOT) then
-        gotoGapLevel()
+        gameStatus = GAME_STATUS_LEVEL_COMPLETE
+        
+        Runtime:removeEventListener("enterFrame", onFrameEnemyShotLv9)
+		Runtime:removeEventListener("collision", onCollisionLv9)
+
+        nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+        nextLevel.scale = {0.5, 0.5}
+        nextLevel:addEventListener("touch", onTapChangeLevel)
     end
 
     frameCounter = frameCounter + 1
@@ -86,12 +95,7 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-        Runtime:removeEventListener("enterFrame", onFrameEnemyShotLv9)
-		Runtime:removeEventListener("touch", onTouchShoot)
-		Runtime:removeEventListener("collision", onCollisionLv9)
 
-		resetVar()
-		clear()
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 

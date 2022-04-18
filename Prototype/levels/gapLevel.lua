@@ -1,4 +1,5 @@
 require ("BaseCode.baseEventHandlers")
+resetVar()
 
 local scene = composer.newScene()
 
@@ -32,19 +33,19 @@ function scene:show( event )
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
 		
-	local sceneGroup = self.view
+		local sceneGroup = self.view
 
-	setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
+		setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
 
-	start = display.newImage("KeepGoing Button.png", protagonistX, protagonistY)
-	start:scale(0.5, 0.5)
-	start:addEventListener("tap", Start)
+		start = display.newImage("KeepGoing Button.png", protagonistX, protagonistY)
+		start:scale(0.5, 0.5)
+		start:addEventListener("tap", Start)
 	
-	exit = display.newImage("Adios Button.png", antagonistX, antagonistY)
-	exit:addEventListener("tap", Exit)
-	exit:scale(0.25, 0.25)
-	
-
+		
+		exit = display.newImage("Adios Button.png", antagonistX, antagonistY)
+		exit:addEventListener("tap", Exit)
+		exit:scale(0.25, 0.25)
+		
 	end
 end
 
@@ -56,6 +57,15 @@ function scene:hide( event )
 	local phase = event.phase
 
 	if ( phase == "will" ) then
+		start:removeEventListener("tap", Start)
+		start.alpha = 0
+		display.remove(start)
+		start.alpha = 0
+		print(start)
+		exit:removeEventListener("tap", Exit)
+		exit.alpha = 0
+		display.remove(exit)
+		display.remove(o)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
@@ -65,7 +75,7 @@ end
 
 -- destroy()
 function scene:destroy( event )
-
+	
 	local sceneGroup = self.view
 end
 

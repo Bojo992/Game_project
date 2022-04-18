@@ -1,16 +1,5 @@
 require ("BaseCode.baseEventHandlers")
 
-setBackgroundImage("Backgrounds\\MainMenu.png")
-
-start = display.newImage("StartButton.png", protagonistX, protagonistY)
-start:scale(0.5, 0.5)
-
-start:addEventListener("tap", Start)
-
-levelNo = 2
-
-Runtime:addEventListener("tap", onTapChangeLevel)
-
 local scene = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
@@ -46,7 +35,16 @@ function scene:show( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-
+		resetVar()
+		setBackgroundImage("Backgrounds\\MainMenu.png")
+		o:toFront()
+		start = display.newImage("StartButton.png", protagonistX, protagonistY)
+		start:scale(0.5, 0.5)
+		start:toFront()
+		
+		start:addEventListener("tap", Start)
+		
+		levelNo = 0
 	end
 end
 

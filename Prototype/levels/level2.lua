@@ -1,4 +1,10 @@
 require ("BaseCode.baseEventHandlers")
+resetVar()
+print("number of frames "..frameCounter)
+
+Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+Runtime:addEventListener("touch", onTouchShoot)
+Runtime:addEventListener("collision", onCollision)
 
 local scene = composer.newScene()
 
@@ -40,10 +46,6 @@ function scene:show( event )
 
 		setProtagonistAnimation("BR_idle")
 		setAntagonistAnimation("Enemy"..levelNo.."_idle")
-
-		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
 	end
 end
 

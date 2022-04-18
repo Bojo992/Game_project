@@ -2,12 +2,9 @@ require("BaseCode.baseEventHandlers")
 
 local scene = composer.newScene()
 
+
 function scene:create( event )
 	local sceneGroup = self.view
-
-	lives = 1
-	levelNo = 1
-	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 end
 
 function scene:show( event )
@@ -18,6 +15,14 @@ function scene:show( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
 
+		
+	resetVar()
+	print("frame counterf: "..frameCounter)	
+
+	lives = 1
+	levelNo = 1
+	print(levelNo)
+	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on scree
 
@@ -28,7 +33,7 @@ function scene:show( event )
 		
 		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
 		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
+		Runtime:addEventListener("collision", onCollision)	
 	end
 end
 

@@ -56,7 +56,6 @@ function displaySign()
     then
         fireSign = display.newImage("Fire!!.png", display.contentCenterX, display.contentCenterY)
         
-        physics.addBody(antagonist, "static", {radius = 100, isSensor=true})
         antagonist.myName = "antagonist"
     end
 
@@ -135,6 +134,7 @@ end
 
 function changeAntagonistAnimationOnCollision(animationName)
     display.remove(antagonist)
+    print("Enemys death "..animationName)
     antagonist = display.newSprite(antagonistSpritesheet, antagonistSequences)
     antagonist.x = antagonistX
     antagonist.y = antagonistY
@@ -171,19 +171,4 @@ function clear()
     display.remove(antagonist)
     display.remove(fireSign)
     display.remove(o)
-end
-
-function resetVar()
-    score = 0
-    lives = 1
-    gameStatus = GAME_STATUS_NONE
-    closeCombat = false
-    enemyCloseCombatFinalPosition = -100
-    frameCounter = 0
-
-    antagonistX = 540
-    antagonistY = protagonistY
-
-    protagonistX = 100
-    protagonistY = display.contentCenterY + 100
 end

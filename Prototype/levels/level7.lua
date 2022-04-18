@@ -1,10 +1,8 @@
 require ("BaseCode.baseEventHandlers")
+resetVar()
+
 
 local scene = composer.newScene()
-
-Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-Runtime:removeEventListener("touch", onTouchShoot)
-Runtime:removeEventListener("collision", onCollision)
 
 function onCollisionDog(event)
     if (event.phase == "began") 
@@ -23,12 +21,19 @@ function onCollisionDog(event)
             then
                 score = 1
                 display.remove(sign)
+                display.remove(missileDog)
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_die")
                 gameStatus = GAME_STATUS_LEVEL_COMPLETE
                 display.remove(antagonist)
+                nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+                nextLevel.scale = {0.5, 0.5}
+                nextLevel:addEventListener("touch", onTapChangeLevel)
+
+                Runtime:removeEventListener("enterFrame", onFrameEnemyShotDog)
+                Runtime:removeEventListener("touch", onTouchShootDog)
+                Runtime:removeEventListener("collision", onCollisionDog)
+
                 print("Level done, game status "..gameStatus.." frame "..frameCounter)
-                Runtime:removeEventListener("touch", onTouchShoot)
-                Runtime:addEventListener("touch", onTapChangeLevel)
             else
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_"..lives.."_die")
                 frameCounter = 0
@@ -184,11 +189,7 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-        Runtime:removeEventListener("enterFrame", onFrameEnemyShotDog)
-		Runtime:removeEventListener("touch", onTouchShootDog)
-		Runtime:removeEventListener("collision", onCollisionDog)
-		resetVar()
-		clear()
+
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 

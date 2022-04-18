@@ -1,4 +1,10 @@
 require ("BaseCode.baseEventHandlers")
+resetVar()
+
+Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+Runtime:addEventListener("touch", onTouchShoot)
+Runtime:addEventListener("collision", onCollision)
+
 
 local scene = composer.newScene()
 
@@ -38,9 +44,6 @@ function scene:show( event )
 		setProtagonistAnimation("BR_idle")
 		setAntagonistAnimation("Enemy"..levelNo.."_idle")
 
-		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
 
@@ -56,12 +59,7 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-		Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-		Runtime:removeEventListener("touch", onTouchShoot)
-		Runtime:removeEventListener("collision", onCollision)
-
-		resetVar()
-		clear()
+		
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 

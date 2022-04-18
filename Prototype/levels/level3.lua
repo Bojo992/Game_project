@@ -1,7 +1,12 @@
 require ("BaseCode.baseEventHandlers")
+resetVar()
+
+Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+Runtime:addEventListener("touch", onTouchShoot)
+Runtime:addEventListener("collision", onCollision)
+
 
 local scene = composer.newScene()
-closeCombat = true
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -26,6 +31,9 @@ function scene:create( event )
 	closeCombat = true
 	enemyCloseCombatFinalPosition = 110
 	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
+
+	print(enemyShootAnimation)
+
 	protagonistY = protagonistY + 10
 	antagonistY = antagonistY + 10
 end
@@ -44,10 +52,6 @@ function scene:show( event )
 
 		setProtagonistAnimation("BR_idle")
 		setAntagonistAnimation("Enemy"..levelNo.."_idle")
-
-		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
@@ -78,7 +82,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-	clear()
+
 end
 
 
