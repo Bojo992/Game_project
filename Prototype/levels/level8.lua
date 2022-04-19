@@ -1,30 +1,13 @@
-require ("BaseCode.baseEventHandlers")
-
-
-
+require("BaseCode.baseEventHandlers")
 
 local scene = composer.newScene()
 
--- -----------------------------------------------------------------------------------
--- Code outside of the scene event functions below will only be executed ONCE unless
--- the scene is removed entirely (not recycled) via "composer.removeScene()"
--- -----------------------------------------------------------------------------------
 
-
-
--- -----------------------------------------------------------------------------------
--- Scene event functions
--- -----------------------------------------------------------------------------------
-
--- create()
 function scene:create( event )
-
 	local sceneGroup = self.view
-	-- Code here runs when the scene is first created but has not yet appeared on screen
+	
 end
 
-
--- show()
 function scene:show( event )
 
 	local sceneGroup = self.view
@@ -32,28 +15,30 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-		resetVar()
-		lives = 6
-		levelNo = 8
-		enemyShootAnimation = "Enemy"..levelNo.."_shoot"
-
 
 		
+		resetVar()
+		print("frame counterf: "..frameCounter)	
+	
+		lives = 6
+		levelNo = 8
+		
+		print(levelNo)
+		enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 	elseif ( phase == "did" ) then
-		-- Code here runs when the scene is entirely on screen
+		-- Code here runs when the scene is entirely on scree
+
 		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
 
 		setProtagonistAnimation("BR_idle")
 		setAntagonistAnimation("Enemy"..levelNo.."_idle")
-
+		
 		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
 		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
+		Runtime:addEventListener("collision", onCollision)	
 	end
 end
 
-
--- hide()
 function scene:hide( event )
 
 	local sceneGroup = self.view
@@ -61,10 +46,13 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-
+		composer.removeScene("levels.level"..levelNo)
+		Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:removeEventListener("touch", onTouchShoot)
+		Runtime:removeEventListener("collision", onCollision)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-
+		
 	end
 end
 
@@ -73,11 +61,9 @@ end
 function scene:destroy( event )
 
 	local sceneGroup = self.view
-	-- Code here runs prior to the removal of scene's view
-	
-	Runtime:addEventListener("enterFrame", onFrameEnemyShotDog)
-	Runtime:addEventListener("touch", onTouchShootDog)
-	Runtime:addEventListener("collision", onCollisionDog)
+	Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+	Runtime:removeEventListener("touch", onTouchShoot)
+	Runtime:removeEventListener("collision", onCollision)
 end
 
 

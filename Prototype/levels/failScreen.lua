@@ -30,6 +30,8 @@ function scene:show( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
 		resetVar()
+
+		
 		
 		setBackgroundImage("Backgrounds\\Game Over.png")
 
@@ -66,6 +68,7 @@ function scene:hide( event )
 		exit.alpha = 0
 		display.remove(exit)
 		display.remove(o)
+		composer.removeScene("levels.failScreen")
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
@@ -77,6 +80,8 @@ end
 function scene:destroy( event )
 	
 	local sceneGroup = self.view
+	exit:removeEventListener("tap", Exit)
+	start:removeEventListener("tap", Repeat)
 end
 
 

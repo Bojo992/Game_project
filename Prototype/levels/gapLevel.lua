@@ -28,6 +28,9 @@ function scene:show( event )
 	local phase = event.phase
 
 	if ( phase == "will" ) then
+		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:addEventListener("touch", onTouchShoot)
+		Runtime:addEventListener("collision", onCollision)
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
 		setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
 
@@ -77,6 +80,8 @@ end
 function scene:destroy( event )
 	
 	local sceneGroup = self.view
+	start:removeEventListener("tap", Start)
+	exit:removeEventListener("tap", Exit)
 end
 
 

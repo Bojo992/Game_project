@@ -43,10 +43,11 @@ function onCollision(event)
         then
             changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
+            print("gamestatus "..gameStatus)
 
             nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
             nextLevel:scale(0.25, 0.25)
-            nextLevel:addEventListener("touch", onTapChangeLevel)
+            nextLevel:addEventListener("touch", onTapRepeatLevel)
         end
     end
 end
@@ -55,7 +56,7 @@ function onTouchShoot(event)
 
     if (event.phase == "began") 
     then       
-        if (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot)) and (gameStatus == GAME_STATUS_NONE and not (gameStatus == GAME_STATUS_LEVEL_COMPLETE)) 
+        if (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot)) and (gameStatus == GAME_STATUS_NONE)
         then
             --Shooting at right time
             print("Frame of shoot "..frameCounter)
@@ -75,7 +76,7 @@ function onTouchShoot(event)
             })
         else 
                 --Missed shot opportunity
-                gameStatus = GAME_STATUS_MISSED_TIMEFRAME
+                gameStatus = GAME_STATUS_PROTAGONIST_SHOT
         end
     end
 end
@@ -120,13 +121,10 @@ function onFrameEnemyShot()
 end
 
 function onTapChangeLevel(event)
-    if (event.phase == "began")
-    then
-        print("game status "..gameStatus)
-    end
+    
+    print(gameStatus)
 
-
-    if (event.phase == "began") and (gameStatus == GAME_STATUS_LEVEL_COMPLETE)
+    if (gameStatus == GAME_STATUS_LEVEL_COMPLETE)
     then
         if (levelNo < 10)
         then
@@ -142,31 +140,28 @@ function onTapChangeLevel(event)
             Runtime:removeEventListener("collision", onCollision)
         end
     end
+end
 
+function onTapRepeatLevel(event)
     if (event.phase == "began") and (gameStatus == GAME_STATUS_PROTAGONIST_SHOT)
     then
         nextLevel:removeEventListener("touch", onTapChangeLevel)
         display.remove(nextLevel)
         fadeAnimation("levels.failScreen")
-        Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-        Runtime:removeEventListener("touch", onTouchShoot)
-        Runtime:removeEventListener("collision", onCollision)
     end
 end
 
 function Start(event)
     print("start, level "..levelNo)
-    
+    resetVar()
     fadeAnimation("levels.level"..(levelNo + 1))
 
 end
 
 function Exit()
     print("exit")
+    resetVar()
     fadeAnimation("..levels.mainMenu")
-    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-    Runtime:removeEventListener("touch", onTouchShoot)
-    Runtime:removeEventListener("collision", onCollision)
 end
 
 function Repeat(event)
@@ -180,7 +175,4 @@ function gotoGapLevel()
     print("gotoGap")
     
     fadeAnimation("levels.gapLevel")
-    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-    Runtime:removeEventListener("touch", onTouchShoot)
-    Runtime:removeEventListener("collision", onCollision)
 end
