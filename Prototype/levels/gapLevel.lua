@@ -28,18 +28,19 @@ function scene:show( event )
 	local phase = event.phase
 
 	if ( phase == "will" ) then
-		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-		Runtime:addEventListener("touch", onTouchShoot)
-		Runtime:addEventListener("collision", onCollision)
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
+		resetVar()
+
+		
+		
 		setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
 
-		start = display.newImage("KeepGoing Button.png", protagonistX, protagonistY)
+		start = display.newImage("KeepGoing Button.png", antagonistX - 150, protagonistY)
 		start:scale(0.5, 0.5)
 		start:addEventListener("tap", Start)
 	
 		
-		exit = display.newImage("Adios Button.png", antagonistX, antagonistY)
+		exit = display.newImage("ToStart Button.png", antagonistX, antagonistY)
 		exit:addEventListener("tap", Exit)
 		exit:scale(0.25, 0.25)
 	elseif ( phase == "did" ) then
@@ -63,12 +64,11 @@ function scene:hide( event )
 		start:removeEventListener("tap", Start)
 		start.alpha = 0
 		display.remove(start)
-		start.alpha = 0
-		print(start)
 		exit:removeEventListener("tap", Exit)
 		exit.alpha = 0
 		display.remove(exit)
 		display.remove(o)
+		composer.removeScene("levels.failScreen")
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
@@ -80,8 +80,8 @@ end
 function scene:destroy( event )
 	
 	local sceneGroup = self.view
-	start:removeEventListener("tap", Start)
 	exit:removeEventListener("tap", Exit)
+	start:removeEventListener("tap", Start)
 end
 
 

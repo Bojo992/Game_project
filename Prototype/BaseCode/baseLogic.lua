@@ -171,6 +171,17 @@ function clear()
     display.remove(antagonist)
     display.remove(fireSign)
     display.remove(o)
+
+    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+    Runtime:removeEventListener("touch", onTouchShoot)
+    Runtime:removeEventListener("collision", onCollision)
+
+    Runtime:removeEventListener("enterFrame", onFrameEnemyShotDog)
+    Runtime:removeEventListener("touch", onTouchShootDog)
+    Runtime:removeEventListener("collision", onCollisionDog)
+
+    Runtime:removeEventListener("enterFrame", onFrameEnemyShotLv9)
+    Runtime:removeEventListener("collision", onCollisionLv9)
 end
 
 function resetVar()

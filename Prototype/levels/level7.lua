@@ -26,7 +26,7 @@ function onCollisionDog(event)
                 gameStatus = GAME_STATUS_LEVEL_COMPLETE
                 display.remove(antagonist)
                 nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
-                nextLevel.scale = {0.5, 0.5}
+                nextLevel:scale(0.25,0.25)
                 nextLevel:addEventListener("touch", onTapChangeLevel)
 
                 Runtime:removeEventListener("enterFrame", onFrameEnemyShotDog)
@@ -51,8 +51,8 @@ function onCollisionDog(event)
         if (checkCollision(obj1, obj2, enemyAtack, "protagonist")) 
         then
             nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
-                nextLevel.scale = {0.5, 0.5}
-                nextLevel:addEventListener("touch", onTapChangeLevel)
+                nextLevel:scale(0.25,0.25)
+                nextLevel:addEventListener("touch", onTapRepeatLevel)
 
             display.remove(antagonist)
             changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
@@ -203,16 +203,7 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-        resetVar()
-        
-    Runtime:removeEventListener("enterFrame", onFrameEnemyShotDog)
-    Runtime:removeEventListener("touch", onTouchShootDog)
-    Runtime:removeEventListener("collision", onCollisionDog)
-
-    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-	Runtime:removeEventListener("touch", onTouchShoot)
-	Runtime:removeEventListener("collision", onCollision)
-	physics.removeBody(protagonist)
+        composer.removeScene("levels.level"..levelNo)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
@@ -225,16 +216,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-    
-    Runtime:addEventListener("enterFrame", onFrameEnemyShotDog)
-    Runtime:addEventListener("touch", onTouchShootDog)
-    Runtime:addEventListener("collision", onCollisionDog)
-
-    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-	Runtime:removeEventListener("touch", onTouchShoot)
-	Runtime:removeEventListener("collision", onCollision)
-	physics.removeBody(antagonist)
-	physics.removeBody(protagonist)
+    clear()
 end
 
 

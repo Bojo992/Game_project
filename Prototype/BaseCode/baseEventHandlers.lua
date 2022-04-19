@@ -122,7 +122,7 @@ end
 
 function onTapChangeLevel(event)
     
-    print(gameStatus)
+    print("onTapChangeLevel, gamestatus "..gameStatus)
 
     if (gameStatus == GAME_STATUS_LEVEL_COMPLETE)
     then
@@ -143,7 +143,7 @@ function onTapChangeLevel(event)
 end
 
 function onTapRepeatLevel(event)
-    if (event.phase == "began") and (gameStatus == GAME_STATUS_PROTAGONIST_SHOT)
+    if (gameStatus == GAME_STATUS_PROTAGONIST_SHOT)
     then
         nextLevel:removeEventListener("touch", onTapChangeLevel)
         display.remove(nextLevel)

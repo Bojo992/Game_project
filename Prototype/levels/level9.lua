@@ -16,8 +16,8 @@ function onCollisionLv9(event)
             changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
             nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
-            nextLevel.scale = {0.5, 0.5}
-            nextLevel:addEventListener("touch", onTapChangeLevel)
+            nextLevel:scale(0.25,0.25)
+            nextLevel:addEventListener("tap", onTapRepeatLevel)
         end
     end
 end
@@ -101,13 +101,8 @@ function scene:hide( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
         
-        Runtime:removeEventListener("enterFrame", onFrameEnemyShotLv9)
-		Runtime:removeEventListener("collision", onCollisionLv9)
-
-        Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-        Runtime:removeEventListener("touch", onTouchShoot)
-        Runtime:removeEventListener("collision", onCollision)
-
+        composer.removeScene("levels.level"..levelNo)
+        clear()
         physics.removeBody(protagonist)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
@@ -121,11 +116,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-	Runtime:removeEventListener("touch", onTouchShoot)
-	Runtime:removeEventListener("collision", onCollision)
-	physics.removeBody(antagonist)
-	physics.removeBody(protagonist)
+    clear()
 end
 
 

@@ -58,9 +58,7 @@ end
 function scene:destroy( event )
 
 	local sceneGroup = self.view
-	Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
-	Runtime:removeEventListener("touch", onTouchShoot)
-	Runtime:removeEventListener("collision", onCollision)
+	clear()
 end
 
 

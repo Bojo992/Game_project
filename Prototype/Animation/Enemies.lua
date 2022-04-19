@@ -642,7 +642,7 @@ SheetInfo.sequences =
 	{
         name = "Enemy10_idle",
         frames = {10},
-        time = 800,
+        time = 1000,
         loopCount = 0,
     },
 	
@@ -716,13 +716,6 @@ SheetInfo.sequences =
         time = 800,
         loopCount = 1,
     },
-
-    -- {
-    --     name = "Enemy10_shoot",
-    --     frames = {12},
-    --     time = 800,
-    --     loopCount = 0,
-    -- },
 
     {
         name = "Enemy1_die",
@@ -820,7 +813,7 @@ SheetInfo.sequences =
 	
 	{
         name = "Enemy10_die",
-        frames = {7, 8, 9},
+        frames = {12, 7, 8, 9},
         time = 800,
         loopCount = 1,
     },

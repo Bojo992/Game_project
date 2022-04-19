@@ -44,7 +44,7 @@ function scene:show( event )
 		
 		start:addEventListener("tap", Start)
 		
-		levelNo = 2
+		levelNo = 6
 	end
 end
 
