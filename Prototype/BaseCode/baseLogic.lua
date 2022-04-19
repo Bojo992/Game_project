@@ -105,6 +105,7 @@ function changeProtagonistAnimationOnCollision(animationName)
 end
 
 function setAntagonistAnimation(animationName)
+
     antagonist = display.newSprite(antagonistSpritesheet, antagonistSequences)
     antagonist.x = antagonistX
     antagonist.y = antagonistY
@@ -118,7 +119,6 @@ function setAntagonistAnimation(animationName)
 end
 
 function changeAntagonistAnimation(animationName)
-    physics.removeBody(antagonist)
     display.remove(antagonist)
     antagonist = display.newSprite(antagonistSpritesheet, antagonistSequences)
     antagonist.x = antagonistX
@@ -171,4 +171,22 @@ function clear()
     display.remove(antagonist)
     display.remove(fireSign)
     display.remove(o)
+end
+
+function resetVar()
+    score = 0
+    lives = 1
+    gameStatus = GAME_STATUS_NONE
+    closeCombat = false
+    enemyCloseCombatFinalPosition = -100
+    frameCounter = 0
+
+    protagonistX = 100
+    protagonistY = display.contentCenterY + 100
+
+    antagonistX = 540
+    antagonistY = protagonistY
+
+    openingFrameForShot = math.random(30, 60)
+    closingFrameForShot = openingFrameForShot + 60
 end

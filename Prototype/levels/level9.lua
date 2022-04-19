@@ -1,5 +1,4 @@
 require ("BaseCode.baseEventHandlers")
-resetVar()
 
 
 function onCollisionLv9(event)
@@ -16,6 +15,9 @@ function onCollisionLv9(event)
         then
             changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
+            nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+            nextLevel.scale = {0.5, 0.5}
+            nextLevel:addEventListener("touch", onTapChangeLevel)
         end
     end
 end
@@ -25,11 +27,8 @@ function onFrameEnemyShotLv9()
     displaySign()
     
     --Enemy shooting
-    if (frameCounter == closingFrameForShot) and (score == 0) and not (gameStatus == GAME_STATUS_PROTAGONIST_SHOT) then
+    if (frameCounter == closingFrameForShot) and not (gameStatus == GAME_STATUS_PROTAGONIST_SHOT) then
         gameStatus = GAME_STATUS_LEVEL_COMPLETE
-        
-        Runtime:removeEventListener("enterFrame", onFrameEnemyShotLv9)
-		Runtime:removeEventListener("collision", onCollisionLv9)
 
         nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
         nextLevel.scale = {0.5, 0.5}
@@ -58,9 +57,7 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
-    lives = 1
-    levelNo = 9
-    enemyShootAnimation = "Enemy"..levelNo.."_shoot"
+    
 end
 
 
@@ -72,6 +69,14 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
+        resetVar()
+        lives = 1
+        levelNo = 9
+
+        openingFrameForShot = 0
+
+        enemyShootAnimation = "Enemy"..levelNo.."_shoot"
+       
         setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
 
         setProtagonistAnimation("BR_idle")
@@ -82,7 +87,7 @@ function scene:show( event )
         Runtime:addEventListener("collision", onCollisionLv9)
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-
+        
 	end
 end
 
@@ -95,7 +100,15 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
+        
+        Runtime:removeEventListener("enterFrame", onFrameEnemyShotLv9)
+		Runtime:removeEventListener("collision", onCollisionLv9)
 
+        Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+        Runtime:removeEventListener("touch", onTouchShoot)
+        Runtime:removeEventListener("collision", onCollision)
+
+        physics.removeBody(protagonist)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 
@@ -108,6 +121,11 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
+    Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+	Runtime:removeEventListener("touch", onTouchShoot)
+	Runtime:removeEventListener("collision", onCollision)
+	physics.removeBody(antagonist)
+	physics.removeBody(protagonist)
 end
 
 

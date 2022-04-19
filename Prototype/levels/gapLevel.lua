@@ -29,12 +29,6 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-
-	elseif ( phase == "did" ) then
-		-- Code here runs when the scene is entirely on screen
-		
-		local sceneGroup = self.view
-
 		setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
 
 		start = display.newImage("KeepGoing Button.png", protagonistX, protagonistY)
@@ -45,6 +39,12 @@ function scene:show( event )
 		exit = display.newImage("Adios Button.png", antagonistX, antagonistY)
 		exit:addEventListener("tap", Exit)
 		exit:scale(0.25, 0.25)
+	elseif ( phase == "did" ) then
+		-- Code here runs when the scene is entirely on screen
+		
+		local sceneGroup = self.view
+
+		
 		
 	end
 end

@@ -19,12 +19,12 @@ function onCollision(event)
                 display.remove(sign)
                 display.remove(missile)
                 nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
-                nextLevel.scale = {0.25, 0.25}
+                nextLevel:scale(0.25, 0.25)
                 nextLevel:addEventListener("touch", onTapChangeLevel)
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_die")
                 gameStatus = GAME_STATUS_LEVEL_COMPLETE
                 print("Level done, level "..levelNo.." lives "..lives)
-            else
+            elseif (lives > 0) then
                 display.remove(missile)
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_"..lives.."_die")
                 frameCounter = 0
@@ -45,7 +45,7 @@ function onCollision(event)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
 
             nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
-            nextLevel.scale = {0.5, 0.5}
+            nextLevel:scale(0.25, 0.25)
             nextLevel:addEventListener("touch", onTapChangeLevel)
         end
     end
@@ -99,7 +99,8 @@ function onFrameEnemyShot()
             transition.to(antagonist, {x = enemyCloseCombatFinalPosition, time = 525,
                 onComplete = 
                     function() 
-                        antagonist:toFront() 
+                        antagonist:toFront()                
+                        physics.removeBody(antagonist) 
                     end
             })
         else
@@ -109,6 +110,7 @@ function onFrameEnemyShot()
                 onComplete = 
                     function() 
                         display.remove(bulletEnemy) 
+                        physics.removeBody(antagonist)
                     end
             })
         end
@@ -124,11 +126,31 @@ function onTapChangeLevel(event)
     end
 
 
-    --if (gameStatus == GAME_STATUS_LEVEL_COMPLETE) and (event.phase == "began")
-    if (event.phase == "began")
+    if (event.phase == "began") and (gameStatus == GAME_STATUS_LEVEL_COMPLETE)
     then
+        if (levelNo < 10)
+        then
+            nextLevel:removeEventListener("touch", onTapChangeLevel)
+            display.remove(nextLevel)
+            gotoGapLevel()
+        else
+            nextLevel:removeEventListener("touch", onTapChangeLevel)
+            display.remove(nextLevel)
+            fadeAnimation("levels.endScreen")
+            Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+            Runtime:removeEventListener("touch", onTouchShoot)
+            Runtime:removeEventListener("collision", onCollision)
+        end
+    end
+
+    if (event.phase == "began") and (gameStatus == GAME_STATUS_PROTAGONIST_SHOT)
+    then
+        nextLevel:removeEventListener("touch", onTapChangeLevel)
         display.remove(nextLevel)
-        gotoGapLevel()
+        fadeAnimation("levels.failScreen")
+        Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+        Runtime:removeEventListener("touch", onTouchShoot)
+        Runtime:removeEventListener("collision", onCollision)
     end
 end
 
@@ -141,12 +163,17 @@ end
 
 function Exit()
     print("exit")
-    
+    fadeAnimation("..levels.mainMenu")
     Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
     Runtime:removeEventListener("touch", onTouchShoot)
     Runtime:removeEventListener("collision", onCollision)
-    clear()
-    fadeAnimation("..levels.mainMenu")
+end
+
+function Repeat(event)
+    print("start, level "..levelNo)
+    resetVar()
+    fadeAnimation("levels.level"..(levelNo))
+
 end
 
 function gotoGapLevel()

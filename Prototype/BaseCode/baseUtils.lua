@@ -26,26 +26,10 @@ function fadeAnimation(destinationPath)
     fade.alpha = 0
     fade:setFillColor(black)
     fade:toFront()
-    transition.to(fade, {alpha = 1, time = 600,
+    transition.to(fade, {alpha = 1, time = 500,
         onComplete = 
             function()
                 display.remove(fade)
                 composer.gotoScene(destinationPath)
             end})
-end
-
-
-function resetVar()
-    score = 0
-    lives = 1
-    gameStatus = GAME_STATUS_NONE
-    closeCombat = false
-    enemyCloseCombatFinalPosition = -100
-    frameCounter = 0
-
-    protagonistX = 100
-    protagonistY = display.contentCenterY + 100
-
-    antagonistX = 540
-    antagonistY = protagonistY
 end

@@ -1,14 +1,8 @@
 require ("BaseCode.baseEventHandlers")
-resetVar()
-
-Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-Runtime:addEventListener("touch", onTouchShoot)
-Runtime:addEventListener("collision", onCollision)
-
 
 local scene = composer.newScene()
-
 closeCombat = true
+
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -25,11 +19,8 @@ closeCombat = true
 function scene:create( event )
 
 	local sceneGroup = self.view
-	-- Code here runs when the scene is first created but has not yet appeared on screen
-	lives = 1
-	levelNo = 5
-	enemyCloseCombatFinalPosition = -100
-	enemyShootAnimation = "Enemy"..levelNo.."_shoot"
+	-- Code here runs when the scene is first created but has not yet appeared on screen		
+	
 end
 
 
@@ -41,13 +32,23 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
+		resetVar()
+		
+		closeCombat = true		
+		lives = 1
+		levelNo = 5
+		enemyCloseCombatFinalPosition = -100
+		enemyShootAnimation = "Enemy"..levelNo.."_shoot"
+	elseif ( phase == "did" ) then
+		-- Code here runs when the scene is entirely on screen
 		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
 
 		setProtagonistAnimation("BR_idle")
 		setAntagonistAnimation("Enemy"..levelNo.."_idle")
-	elseif ( phase == "did" ) then
-		-- Code here runs when the scene is entirely on screen
 
+		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:addEventListener("touch", onTouchShoot)
+		Runtime:addEventListener("collision", onCollision)
 	end
 end
 
@@ -73,6 +74,11 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
+	Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+	Runtime:removeEventListener("touch", onTouchShoot)
+	Runtime:removeEventListener("collision", onCollision)
+	physics.removeBody(antagonist)
+	physics.removeBody(protagonist)
 end
 
 

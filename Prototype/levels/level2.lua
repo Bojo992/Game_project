@@ -2,10 +2,6 @@ require ("BaseCode.baseEventHandlers")
 resetVar()
 print("number of frames "..frameCounter)
 
-Runtime:addEventListener("enterFrame", onFrameEnemyShot)
-Runtime:addEventListener("touch", onTouchShoot)
-Runtime:addEventListener("collision", onCollision)
-
 local scene = composer.newScene()
 
 -- -----------------------------------------------------------------------------------
@@ -41,11 +37,20 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
+		resetVar()
+
+		lives = 1
+		levelNo = 2
+		enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 	elseif ( phase == "did" ) then
 		setBackgroundImage("Backgrounds\\Lv"..levelNo..".png")
 
 		setProtagonistAnimation("BR_idle")
 		setAntagonistAnimation("Enemy"..levelNo.."_idle")
+
+		Runtime:addEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:addEventListener("touch", onTouchShoot)
+		Runtime:addEventListener("collision", onCollision)
 	end
 end
 
@@ -71,6 +76,11 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
+	Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+	Runtime:removeEventListener("touch", onTouchShoot)
+	Runtime:removeEventListener("collision", onCollision)
+	physics.removeBody(antagonist)
+	physics.removeBody(protagonist)
 end
 
 

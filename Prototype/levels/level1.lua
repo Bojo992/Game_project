@@ -5,6 +5,7 @@ local scene = composer.newScene()
 
 function scene:create( event )
 	local sceneGroup = self.view
+	print("level 1 created")
 end
 
 function scene:show( event )
@@ -44,7 +45,10 @@ function scene:hide( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-
+		composer.removeScene("levels.level1")
+		Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+		Runtime:removeEventListener("touch", onTouchShoot)
+		Runtime:removeEventListener("collision", onCollision)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 		
@@ -56,6 +60,9 @@ end
 function scene:destroy( event )
 
 	local sceneGroup = self.view
+	Runtime:removeEventListener("enterFrame", onFrameEnemyShot)
+	Runtime:removeEventListener("touch", onTouchShoot)
+	Runtime:removeEventListener("collision", onCollision)
 end
 
 
