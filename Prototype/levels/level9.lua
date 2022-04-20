@@ -15,7 +15,7 @@ function onCollisionLv9(event)
         then
             changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
-            nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+            nextLevel = display.newImage("KeepGoing Button.png", antagonistX, display.contentCenterY)
             nextLevel:scale(0.25,0.25)
             nextLevel:addEventListener("tap", onTapRepeatLevel)
         end
@@ -30,7 +30,7 @@ function onFrameEnemyShotLv9()
     if (frameCounter == closingFrameForShot) and not (gameStatus == GAME_STATUS_PROTAGONIST_SHOT) then
         gameStatus = GAME_STATUS_LEVEL_COMPLETE
 
-        nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+        nextLevel = display.newImage("KeepGoing Button.png", antagonistX, display.contentCenterY)
         nextLevel.scale = {0.5, 0.5}
         nextLevel:addEventListener("touch", onTapChangeLevel)
     end

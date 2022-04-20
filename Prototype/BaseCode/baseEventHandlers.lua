@@ -18,7 +18,7 @@ function onCollision(event)
                 score = 1
                 display.remove(sign)
                 display.remove(missile)
-                nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+                nextLevel = display.newImage("KeepGoing Button.png", antagonistX, display.contentCenterY)
                 nextLevel:scale(0.25, 0.25)
                 nextLevel:addEventListener("touch", onTapChangeLevel)
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_die")
@@ -45,7 +45,7 @@ function onCollision(event)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
             print("gamestatus "..gameStatus)
 
-            nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+            nextLevel = display.newImage("KeepGoing Button.png", antagonistX, display.contentCenterY)
             nextLevel:scale(0.25, 0.25)
             nextLevel:addEventListener("touch", onTapRepeatLevel)
         end
@@ -175,4 +175,10 @@ function gotoGapLevel()
     print("gotoGap")
     
     fadeAnimation("levels.gapLevel")
+end
+
+function Extra()
+    print("extra")
+    resetVar()
+    fadeAnimation("..levels.extrasLevel")
 end

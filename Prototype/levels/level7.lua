@@ -25,7 +25,7 @@ function onCollisionDog(event)
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_die")
                 gameStatus = GAME_STATUS_LEVEL_COMPLETE
                 display.remove(antagonist)
-                nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+                nextLevel = display.newImage("KeepGoing Button.png", 540, display.contentCenterY)
                 nextLevel:scale(0.25,0.25)
                 nextLevel:addEventListener("touch", onTapChangeLevel)
 
@@ -50,7 +50,7 @@ function onCollisionDog(event)
 
         if (checkCollision(obj1, obj2, enemyAtack, "protagonist")) 
         then
-            nextLevel = display.newImage("KeepGoing Button.png", display.contentCenterX, display.contentCenterY)
+            nextLevel = display.newImage("KeepGoing Button.png", 540, display.contentCenterY)
                 nextLevel:scale(0.25,0.25)
                 nextLevel:addEventListener("touch", onTapRepeatLevel)
 

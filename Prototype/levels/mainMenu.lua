@@ -38,13 +38,19 @@ function scene:show( event )
 		resetVar()
 		setBackgroundImage("Backgrounds\\MainMenu.png")
 		o:toFront()
-		start = display.newImage("StartButton.png", protagonistX, protagonistY)
+		start = display.newImage("StartButton.png", protagonistX, display.contentCenterY)
 		start:scale(0.5, 0.5)
 		start:toFront()
 		
 		start:addEventListener("tap", Start)
 		
-		levelNo = 6
+		extra = display.newImage("ExtrasButton.png", protagonistX, protagonistY)
+		extra:scale(0.5, 0.5)
+		extra:toFront()
+
+		extra:addEventListener("tap", Extra)
+
+		levelNo = 0
 	end
 end
 
@@ -58,6 +64,7 @@ function scene:hide( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
 		display.remove(start)
+		display.remove(extra)
 		display.remove(o)
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
