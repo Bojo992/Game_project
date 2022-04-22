@@ -1,6 +1,28 @@
-local composer = require("composer")
+require("BaseCode.baseEventHandlers")
 
-composer.gotoScene("levels.mainMenu")
+local frame = 0
+
+local function fadeAnimation(event)
+    frame = frame + 1
+	local fade = display.newRect(display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight)
+    fade.alpha = -1
+    fade:setFillColor(black)
+    fade:toFront()
+	if (frame == 100)
+	then
+		transition.to(fade, {alpha = 1, time = 500,
+			onComplete = 
+				function()
+					display.remove(fade)
+					composer.gotoScene("levels.mainMenu")
+				end})
+	end
+end
+
+setBackgroundImage("Backgrounds\\madeBy.png")
+
+
+Runtime:addEventListener("enterFrame", fadeAnimation)
 
 local scene = composer.newScene()
 

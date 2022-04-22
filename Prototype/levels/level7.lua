@@ -19,6 +19,7 @@ function onCollisionDog(event)
             lives = lives - 1
             if (lives == 0)
             then
+                playShootSound(happyDogSound)
                 score = 1
                 display.remove(sign)
                 display.remove(missileDog)
@@ -50,6 +51,7 @@ function onCollisionDog(event)
 
         if (checkCollision(obj1, obj2, enemyAtack, "protagonist")) 
         then
+            playShootSound(angryDogSound)
             nextLevel = display.newImage("KeepGoing Button.png", 540, display.contentCenterY)
                 nextLevel:scale(0.25,0.25)
                 nextLevel:addEventListener("touch", onTapRepeatLevel)

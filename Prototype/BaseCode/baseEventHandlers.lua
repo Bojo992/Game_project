@@ -15,6 +15,7 @@ function onCollision(event)
             lives = lives - 1
             if (lives == 0)
             then
+                playSuccessSound()
                 score = 1
                 display.remove(sign)
                 display.remove(missile)
@@ -41,6 +42,7 @@ function onCollision(event)
 
         if (checkCollision(obj1, obj2, enemyAtack, "protagonist")) 
         then
+            playFailSound()
             changeProtagonistAnimationOnCollision("BR_Die"..levelNo)
             gameStatus = GAME_STATUS_PROTAGONIST_SHOT
             print("gamestatus "..gameStatus)
@@ -59,6 +61,7 @@ function onTouchShoot(event)
         if (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot)) and (gameStatus == GAME_STATUS_NONE)
         then
             --Shooting at right time
+            playShootSound(shootSound)
             print("Frame of shoot "..frameCounter)
             print("Opening frame for shoot "..openingFrameForShot)
             changeProtagonistAnimation("BR_Shoot"..levelNo)
@@ -69,14 +72,16 @@ function onTouchShoot(event)
 
             setMissile()
 
-            transition.to(missile, {x = 700, time = 200,
+            transition.to(missile, {x = 700, time = 400,
                 onComplete = function() 
                     display.remove(missile) 
                 end
             })
         else 
                 --Missed shot opportunity
+                playShootSound(missSound)
                 gameStatus = GAME_STATUS_PROTAGONIST_SHOT
+                Runtime:removeEventListener("touch", onTouchShoot)
         end
     end
 end
@@ -92,12 +97,26 @@ function onFrameEnemyShot()
         print(closeCombat)
         print(lives)
 
+        local enemyAtackSound = shootSound
+
         if (closeCombat)
         then
             antagonist.bodyType = "dynamic"
             antagonist.gravityScale = 0
 
-            transition.to(antagonist, {x = enemyCloseCombatFinalPosition, time = 525,
+            if (levelNo == 3)
+            then
+                enemyAtackSound = swordSound
+            end
+
+            if (levelNo == 5)
+            then
+                enemyAtackSound = carSound
+            end
+
+            playShootSound(enemyAtackSound)
+
+            transition.to(antagonist, {x = enemyCloseCombatFinalPosition, time = 550,
                 onComplete = 
                     function() 
                         antagonist:toFront()                
@@ -105,6 +124,8 @@ function onFrameEnemyShot()
                     end
             })
         else
+            playShootSound(enemyAtackSound)
+
             setEnemyBullet()
 
             transition.to(bulletEnemy, {x = -100, time = 525,
@@ -121,6 +142,8 @@ function onFrameEnemyShot()
 end
 
 function onTapChangeLevel(event)
+    gameStatus = GAME_STATUS_LEVEL_COMPLETE
+    
     
     print("onTapChangeLevel, gamestatus "..gameStatus)
 

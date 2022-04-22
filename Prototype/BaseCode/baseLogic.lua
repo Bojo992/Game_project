@@ -5,6 +5,17 @@ physics.start()
 
 composer = require("composer")
 
+--Sounds
+successSound = audio.loadSound("Sound\\Success_sound_effect.mp4")
+failSound = audio.loadSound("Sound\\Fail_sound_effect.mp4")
+shootSound = audio.loadSound("Sound\\shoot_soun_effect.mp3")
+carSound = audio.loadSound("Sound\\car_sound_effect.mp3")
+swordSound = audio.loadSound("Sound\\sword_sound_effect.mp3")
+happyDogSound = audio.loadSound("Sound\\happy_dog_sound_effect.mp3")
+angryDogSound = audio.loadSound("Sound\\angry_dog_sound_effect.mp3")
+missSound = audio.loadSound("Sound\\miss_sound_effect.mp3")
+
+
 --Setup for protagonist animations 
 local protagonistAnimations = require("Animation.BR")
 local protagonistSheetOptions = protagonistAnimations:getSheet()
@@ -164,6 +175,30 @@ function setEnemyBullet()
 
     physics.addBody(protagonist, "static", {radius = 20, isSensor=true })
     protagonist.myName = "protagonist"
+end
+
+function playSuccessSound()
+    audio.play(successSound,{
+        channel = 1,
+        loop = 1,
+        fedein = 500,
+    })
+end
+
+function playFailSound()
+    audio.play(failSound,{
+        channel = 1,
+        loop = 1,
+        fedein = 500,
+    })
+end
+
+function playShootSound(enemyShootSound)
+    audio.play(enemyShootSound,{
+        channel = 2,
+        loop = 1,
+        fedein = 500,
+    })
 end
 
 function clear()
