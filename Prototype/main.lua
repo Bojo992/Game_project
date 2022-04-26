@@ -1,5 +1,7 @@
 require("BaseCode.baseEventHandlers")
 
+audio.setVolume(0.1, {channel=6})
+
 local frame = 0
 
 local function fadeAnimation(event)

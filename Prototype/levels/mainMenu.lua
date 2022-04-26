@@ -16,7 +16,8 @@ local scene = composer.newScene()
 
 -- create()
 function scene:create( event )
-
+	Runtime:addEventListener("enterFrame", playBackgroundSound)
+	audio.setVolume(0.75)
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
 	print("switch")
@@ -50,7 +51,7 @@ function scene:show( event )
 
 		extra:addEventListener("tap", Extra)
 
-		levelNo = 0
+		levelNo = 7
 	end
 end
 

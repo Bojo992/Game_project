@@ -33,3 +33,13 @@ function fadeAnimation(destinationPath)
                 composer.gotoScene(destinationPath)
             end})
 end
+
+function playBackgroundSound()
+    audio.play(backgroundSound,{
+        channel = 6,
+        loops = -1,
+        duration = 30000,
+        fadein = 5000,
+        onComplete = callbackListener
+    })
+end

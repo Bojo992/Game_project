@@ -16,6 +16,7 @@ function onCollision(event)
             if (lives == 0)
             then
                 playSuccessSound()
+                Runtime:removeEventListener("touch", onTouchShoot)
                 score = 1
                 display.remove(sign)
                 display.remove(missile)
@@ -27,8 +28,12 @@ function onCollision(event)
                 print("Level done, level "..levelNo.." lives "..lives)
             elseif (lives > 0) then
                 display.remove(missile)
+                playShootSound(shootSound)
+                playSignSound()
                 changeAntagonistAnimationOnCollision("Enemy"..levelNo.."_"..lives.."_die")
                 frameCounter = 0
+                openingFrameForShot = math.random(30, 60)
+                closingFrameForShot = openingFrameForShot + 60
                 display.remove(fireSign)
             end
         end

@@ -14,6 +14,8 @@ swordSound = audio.loadSound("Sound\\sword_sound_effect.mp3")
 happyDogSound = audio.loadSound("Sound\\happy_dog_sound_effect.mp3")
 angryDogSound = audio.loadSound("Sound\\angry_dog_sound_effect.mp3")
 missSound = audio.loadSound("Sound\\miss_sound_effect.mp3")
+signSound = audio.loadSound("Sound\\sign_sound_effect.mp3")
+backgroundSound = audio.loadSound("Sound\\background_sound_effect.mp3")
 
 
 --Setup for protagonist animations 
@@ -63,8 +65,10 @@ missileX = 120
 missileY = display.contentCenterY + 100
 
 function displaySign()
-    if (frameCounter == openingFrameForShot) and not (frameCounter == closingFrameForShot) and (score == 0) 
+    if (frameCounter == openingFrameForShot) and (score == 0) 
     then
+        playSignSound()
+
         fireSign = display.newImage("Fire!!.png", display.contentCenterX, display.contentCenterY)
         
         antagonist.myName = "antagonist"
@@ -196,6 +200,14 @@ end
 function playShootSound(enemyShootSound)
     audio.play(enemyShootSound,{
         channel = 2,
+        loop = 1,
+        fedein = 500,
+    })
+end
+
+function playSignSound()
+    audio.play(signSound,{
+        channel = 3,
         loop = 1,
         fedein = 500,
     })

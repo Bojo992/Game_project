@@ -24,6 +24,8 @@ function scene:show( event )
 		levelNo = 8
 		
 		print(levelNo)
+		openingFrameForShot = 90
+		closingFrameForShot = 140
 		enemyShootAnimation = "Enemy"..levelNo.."_shoot"
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on scree
