@@ -14,7 +14,8 @@ swordSound = audio.loadSound("Sound\\sword_sound_effect.mp3")
 happyDogSound = audio.loadSound("Sound\\happy_dog_sound_effect.mp3")
 angryDogSound = audio.loadSound("Sound\\angry_dog_sound_effect.mp3")
 missSound = audio.loadSound("Sound\\miss_sound_effect.mp3")
-signSound = audio.loadSound("Sound\\sign_sound_effect.mp3")
+-- signSound = audio.loadSound("Sound\\sign_sound_effect.mp3")
+signSound = audio.loadSound("Sound\\sign_sound_effect(1).mp3")
 backgroundSound = audio.loadSound("Sound\\background_sound_effect.mp3")
 
 
@@ -214,6 +215,8 @@ function playSignSound()
 end
 
 function clear()
+    display.remove(textImage)
+
     display.remove(protagonist)
     display.remove(antagonist)
     display.remove(fireSign)

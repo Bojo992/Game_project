@@ -31,7 +31,7 @@ function onFrameEnemyShotLv9()
         gameStatus = GAME_STATUS_LEVEL_COMPLETE
 
         nextLevel = display.newImage("KeepGoing Button.png", antagonistX, display.contentCenterY)
-        nextLevel.scale = {0.5, 0.5}
+        nextLevel:scale(0.25, 0.25)
         nextLevel:addEventListener("touch", onTapChangeLevel)
     end
 

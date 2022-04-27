@@ -210,3 +210,173 @@ function Extra()
     resetVar()
     fadeAnimation("..levels.extrasLevel")
 end
+
+textImage = nil
+function Icon1(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy10_idle")
+        textImage = display.newImageRect( "bankerBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon2(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy1_idle")
+        textImage = display.newImageRect( "sleepingJoeBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+        
+    end
+end
+
+function Icon3(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy2_idle")
+        textImage = display.newImageRect( "bandaBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon4(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy3_idle")
+        textImage = display.newImageRect( "larryBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon5(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy4_idle")
+        textImage = display.newImageRect( "bigToothBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon6(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy5_idle")
+        textImage = display.newImageRect( "joeBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon7(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 70
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy6_idle")
+        textImage = display.newImageRect( "foxBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon8(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 50
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy7_idle")
+        textImage = display.newImageRect( "churroBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon9(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setAntagonistAnimation("Enemy8_idle")
+        textImage = display.newImageRect( "richolasBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon10(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        antagonistX = 120
+        antagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        --FIX
+        --need to scale
+        setAntagonistAnimation("Enemy9_idle")
+        antagonist:scale(0.4, 0.4)
+        textImage = display.newImageRect( "suicideBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
+
+function Icon11(event)
+    if ( event.phase == "began" ) 
+    then
+        print("WORKINGG")
+        protagonistX = 120
+        protagonistY = 80
+        setBackgroundImage("Backgrounds\\Character Bios.png")
+        clear()
+        setProtagonistAnimation("BR_idle")
+        textImage = display.newImageRect( "normanBio.png", 325, 200 )
+        textImage.x = 425
+        textImage.y = 130
+    end
+end
