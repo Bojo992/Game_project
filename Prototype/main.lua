@@ -1,3 +1,5 @@
+-- Made by goup 8
+
 require("BaseCode.baseEventHandlers")
 
 audio.setVolume(0.1, {channel=6})

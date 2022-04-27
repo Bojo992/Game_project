@@ -1,3 +1,5 @@
+-- Made by goup 8
+
 require("BaseCode.baseValues")
 
 function checkCollision(obj1, obj2, name1, name2) 

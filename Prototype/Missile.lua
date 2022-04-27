@@ -1,3 +1,5 @@
+-- Made by goup 8
+
 --
 -- created with TexturePacker - https://www.codeandweb.com/texturepacker
 --

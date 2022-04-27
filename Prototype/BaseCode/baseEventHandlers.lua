@@ -1,3 +1,5 @@
+-- Made by goup 8
+
 require ("..BaseCode.baseLogic")
 
 function onCollision(event)
