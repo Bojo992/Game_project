@@ -33,7 +33,7 @@ function scene:show( event )
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
 		resetVar()
 
-		
+		repeatOnece = true
 		
 		setBackgroundImage("Backgrounds\\Kinda Pause Menu.png")
 

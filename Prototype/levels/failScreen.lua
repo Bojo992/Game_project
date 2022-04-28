@@ -32,6 +32,7 @@ function scene:show( event )
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
 		resetVar()
+		repeatOnece = true
 
 		
 		

@@ -65,7 +65,7 @@ function onTouchShoot(event)
 
     if (event.phase == "began") 
     then       
-        if (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot)) and (gameStatus == GAME_STATUS_NONE)
+        if (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot - 2)) and (gameStatus == GAME_STATUS_NONE)
         then
             --Shooting at right time
             playShootSound(shootSound)
@@ -182,10 +182,13 @@ function onTapRepeatLevel(event)
 end
 
 function Start(event)
-    print("start, level "..levelNo)
-    resetVar()
-    fadeAnimation("levels.level"..(levelNo + 1))
-
+    if (repeatOnece)
+    then
+        repeatOnece = false
+        print("start, level "..levelNo)
+        resetVar()
+        fadeAnimation("levels.level"..(levelNo + 1))
+    end
 end
 
 function Exit()
@@ -195,10 +198,13 @@ function Exit()
 end
 
 function Repeat(event)
-    print("start, level "..levelNo)
-    resetVar()
-    fadeAnimation("levels.level"..(levelNo))
-
+    if (repeatOnece)
+    then
+        repeatOnece = false
+        print("start, level "..levelNo)
+        resetVar()
+        fadeAnimation("levels.level"..(levelNo))
+    end
 end
 
 function gotoGapLevel()

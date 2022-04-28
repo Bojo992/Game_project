@@ -2,6 +2,42 @@
 
 require ("BaseCode.baseEventHandlers")
 
+local shootprotection = true
+
+function onTouchShootLv9(event)
+    if (event.phase == "began") 
+    then       
+        if (isWithinTimeWindow(frameCounter, openingFrameForShot, closingFrameForShot)) and (gameStatus == GAME_STATUS_NONE) and shootprotection
+        then
+            --Shooting at right time
+            shootprotection = false
+            Runtime:removeEventListener("touch", onTouchShootLv9)
+            playShootSound(shootSound)
+            print("Frame of shoot "..frameCounter)
+            print("Opening frame for shoot "..openingFrameForShot)
+            changeProtagonistAnimation("BR_Shoot"..levelNo)
+            
+            physics.addBody(antagonist, "static", {radius = 100, isSensor=true})
+            antagonist.myName = "antagonist"
+
+
+            setMissile()
+
+            transition.to(missile, {x = 700, time = 400,
+                onComplete = function() 
+                    display.remove(missile) 
+                end
+            })
+        else 
+                --Missed shot opportunity
+                playShootSound(missSound)
+                Runtime:removeEventListener("touch", onTouchShootLv9)
+                gameStatus = GAME_STATUS_PROTAGONIST_SHOT
+                Runtime:removeEventListener("touch", onTouchShoot)
+        end
+    end
+end
+
 
 function onCollisionLv9(event)
     if (event.phase == "began") 
@@ -71,6 +107,7 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
+        shootprotection = true
         resetVar()
         lives = 1
         levelNo = 9
@@ -85,7 +122,7 @@ function scene:show( event )
         setAntagonistAnimation("Enemy"..levelNo.."_idle")
         
         Runtime:addEventListener("enterFrame", onFrameEnemyShotLv9)
-        Runtime:addEventListener("touch", onTouchShoot)
+        Runtime:addEventListener("touch", onTouchShootLv9)
         Runtime:addEventListener("collision", onCollisionLv9)
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen

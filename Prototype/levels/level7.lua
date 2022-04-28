@@ -74,7 +74,7 @@ function onTouchShootDog(event)
         then
             --Shooting at right time
             changeProtagonistAnimation("BR_Shoot"..levelNo)
-            
+            Runtime:removeEventListener("touch", onTouchShootDog)
             setMissileDog()
 
             transition.to(missileDog, {x = 500, time = 300,
@@ -86,6 +86,7 @@ function onTouchShootDog(event)
             if not (gameStatus == GAME_STATUS_LEVEL_COMPLETE)
             then
                 --Missed shot opportunity
+                Runtime:removeEventListener("touch", onTouchShootDog)
                 print("gameStatus: ".. gameStatus)
                 gameStatus = GAME_STATUS_MISSED_TIMEFRAME
             end

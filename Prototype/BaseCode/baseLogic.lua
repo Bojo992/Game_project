@@ -48,6 +48,8 @@ enemyCloseCombatFinalPosition = -100
 
 frameCounter = 0
 
+repeatOnece = true
+
 openingFrameForShot = math.random(30, 60)
 closingFrameForShot = openingFrameForShot + 60
 
